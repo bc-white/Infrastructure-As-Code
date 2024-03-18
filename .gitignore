@@ -165,3 +165,5 @@ override.tf.json
 .terraformrc
 terraform.rc
 
+# Ignore Node Modules
+*.node_modules
