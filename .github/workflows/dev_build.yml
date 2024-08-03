@@ -1,0 +1,20 @@
+name: Dev Build
+on:
+    push:
+        branches:
+            - development
+    pull_request:
+        types: [opened, synchronize, reopened]
+jobs:
+    SonarCloud:
+        name: SonarCloud
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+              with:
+                fetch-depth: 0 # Shallow clones should be diabled for a better relevancy for analysis
+            - name: SonarCloudScan
+              uses: SonarSource/sonarcloud-github-action@master
+              env:
+                GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+                SONAR_TOKEN: ${{secrets.SONAR_TOKEN}}

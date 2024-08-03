@@ -1,9 +1,8 @@
-name: Build
+name: Main Build
 on:
     push:
         branches:
             - main
-            - development
     pull_request:
         types: [opened, synchronize, reopened]
 jobs:
