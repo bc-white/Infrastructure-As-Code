@@ -1,6 +1,6 @@
 {
     "sonarlint.connectedMode.project": {
-        "connectionId": "",
-        "projectKey": ""
+        "connectionId": "SonarCloud GitPod IAC Connection",
+        "projectKey": "bc-white_Infrastructure-As-Code"
     }
 }
