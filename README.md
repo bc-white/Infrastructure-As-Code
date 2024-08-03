@@ -1,4 +1,7 @@
 # Infrastructure-As-Code
+
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=bc-white_Infrastructure-As-Code&metric=alert_status&token=8975cf40ba5a7c0a6a528570836900e257f7ca48)](https://sonarcloud.io/summary/new_code?id=bc-white_Infrastructure-As-Code)
+
 This repository contains infrastructure as code items from my time as an engineer.
 
 [![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/bc-white/Infrastructure-As-Code)
