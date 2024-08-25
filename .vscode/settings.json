@@ -1,6 +1,6 @@
 {
     "sonarlint.connectedMode.project": {
-        "connectionId": "SonarCloud GitPod IAC Connection",
+        "connectionId": "Dell-Laptop-VSCode",
         "projectKey": "bc-white_Infrastructure-As-Code"
     }
 }
