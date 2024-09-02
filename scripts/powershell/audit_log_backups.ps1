@@ -14,7 +14,7 @@ param (
 $Timestamp = Get-Date -Format "yyyyMMdd_HHmmss"
 
 # Set the backup file name
-$BackupFileName = "AuditLogs_$Timestamp.evtx"
+$BackupFileName = "SecurityLogs_$Timestamp.evtx"
 
 # Set the source and destination paths
 $SourcePath = "C:\Windows\System32\winevt\Logs\Security.evtx"
