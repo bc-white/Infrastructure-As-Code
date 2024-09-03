@@ -71,7 +71,7 @@ def ingest_skills(skills_file: str, stop_words: Set[str]) -> List[str]:
                 # Split on commas, but not within parentheses
                 for skill in re.split(r',\s*(?![^()]*\))',line.strip().replace(';', ',')):
                     skills.append(remove_stopwords(skill.strip(), stop_words))
-        return skills
+        return deduplicate_skills(skills)
     except FileNotFoundError as exc:
         raise FileNotFoundError(f'Skills file: {skills_file} not found') from exc
 
@@ -97,13 +97,19 @@ def remove_stopwords(skill: str, stop_words: set) -> str:
     Returns:
         str: Skill with stopwords removed
     """
-    logging.info('Removing stopwords from %s...', skill)
     skill_tokens = word_tokenize(skill)
-    filtered_skill = []
-    for word in skill_tokens:
-        if word.lower() not in stop_words:
-            filtered_skill.append(word)
+    filtered_skill = [word for word in skill_tokens if word.lower() not in stop_words]
     return ' '.join(filtered_skill)
+
+def deduplicate_skills(skills: List[str]) -> List[str]:
+    """Deduplicate skills
+    Args:
+        skills (List[str]): List of skills
+    Returns:
+        List[str]: List of unique skills
+    """
+    logging.info('Deduplicating skills...')
+    return list({k: None for k in skills}.keys())
 
 def main(args: argparse.Namespace) -> None:
     """Main function
