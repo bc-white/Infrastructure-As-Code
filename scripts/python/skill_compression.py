@@ -122,7 +122,6 @@ def main(args: argparse.Namespace) -> None:
     except PermissionError as exc:
         logging.error(exc)
         sys.exit(1)
-    
 
 if __name__ == '__main__':
     if len(sys.argv) < 3:
