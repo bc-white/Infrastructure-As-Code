@@ -9,11 +9,12 @@ Usage: python skill_condenser.py < src_skills.txt > < dest_skills.txt >
 '''
 import argparse
 import logging
+import os
 import sys
-from typing import List
+from typing import List, Set
 from nltk import download as nltk_download
 from nltk.corpus import stopwords
-# from nltk.tokenize import word_tokenize
+from nltk.tokenize import word_tokenize
 
 # Set up logging
 logging.basicConfig(format="{asctime} - {levelname} - {message}",
@@ -38,10 +39,23 @@ def process_args() -> argparse.Namespace:
                         help='Path to the destination condensed skills file')
     return parser.parse_args()
 
-def ingest_skills(skills_file: str) -> List[str]:
+def sanitize_args(args: argparse.Namespace) -> argparse.Namespace:
+    """Sanitize command-line arguments
+    Args:
+        args (argparse.Namespace): Command-line arguments
+    Returns:
+        argparse.Namespace: Sanitized arguments
+    """
+    logging.info('Sanitizing arguments...')
+    args.src_skill_file = os.path.realpath(args.src_skill_file)
+    args.dest_skill_file = os.path.realpath(args.dest_skill_file)
+    return args
+
+def ingest_skills(skills_file: str, stop_words: Set[str]) -> List[str]:
     """Ingest skills from a file, splitting sentences on commas and semicolons
     Args:
         skills_file (str): Path to the skills file
+        stop_words (Set[str]): List of stopwords to remove
     Returns:
         List[str]: List of skills
     
@@ -54,7 +68,7 @@ def ingest_skills(skills_file: str) -> List[str]:
         with open(skills_file, 'r', encoding='utf-8') as src_skills:
             for line in src_skills:
                 for skill in line.strip().replace(';', ',').split(','):
-                    skills.append(skill.strip())
+                    skills.append(remove_stopwords(skill.strip(), stop_words))
         return skills
     except FileNotFoundError as exc:
         raise FileNotFoundError(f'Skills file: {skills_file} not found') from exc
@@ -73,16 +87,33 @@ def output_skills(skills: List[str], dest_skills_file: str) -> None:
     except PermissionError as exc:
         raise PermissionError(f'Permission denied writing: {dest_skills_file}') from exc
 
+def remove_stopwords(skill: str, stop_words: set) -> str:
+    """Remove stopwords from a skill
+    Args:
+        skill (str): Skill to remove stopwords from
+        stop_words (set): Set of stopwords
+    Returns:
+        str: Skill with stopwords removed
+    """
+    logging.info('Removing stopwords from %s...', skill)
+    skill_tokens = word_tokenize(skill)
+    filtered_skill = []
+    for word in skill_tokens:
+        if word.lower() not in stop_words:
+            filtered_skill.append(word)
+    return ' '.join(filtered_skill)
+
 def main(args: argparse.Namespace) -> None:
     """Main function
     Args:
         args (argparse.Namespace): Command-line arguments
     """
+    args = sanitize_args(args)
     logging.info('Downloading NLTK stopwords...')
     nltk_download('stopwords', quiet=True)
     stop_words = set(stopwords.words('english'))
     try:
-        skills = ingest_skills(args.src_skill_file)
+        skills = ingest_skills(args.src_skill_file, stop_words)
     except FileNotFoundError as exc:
         logging.error(exc)
         sys.exit(1)
@@ -91,7 +122,7 @@ def main(args: argparse.Namespace) -> None:
     except PermissionError as exc:
         logging.error(exc)
         sys.exit(1)
-    # print(stop_words)
+    
 
 if __name__ == '__main__':
     if len(sys.argv) < 3:
