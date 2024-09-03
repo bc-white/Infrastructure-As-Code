@@ -10,6 +10,7 @@ Usage: python skill_condenser.py < src_skills.txt > < dest_skills.txt >
 import argparse
 import logging
 import os
+import re
 import sys
 from typing import List, Set
 from nltk import download as nltk_download
@@ -67,7 +68,8 @@ def ingest_skills(skills_file: str, stop_words: Set[str]) -> List[str]:
     try:
         with open(skills_file, 'r', encoding='utf-8') as src_skills:
             for line in src_skills:
-                for skill in line.strip().replace(';', ',').split(','):
+                # Split on commas, but not within parentheses
+                for skill in re.split(r',\s*(?![^()]*\))',line.strip().replace(';', ',')):
                     skills.append(remove_stopwords(skill.strip(), stop_words))
         return skills
     except FileNotFoundError as exc:
@@ -111,6 +113,7 @@ def main(args: argparse.Namespace) -> None:
     args = sanitize_args(args)
     logging.info('Downloading NLTK stopwords...')
     nltk_download('stopwords', quiet=True)
+    nltk_download('punkt_tab', quiet=True)
     stop_words = set(stopwords.words('english'))
     try:
         skills = ingest_skills(args.src_skill_file, stop_words)
