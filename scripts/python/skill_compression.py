@@ -13,6 +13,7 @@ import os
 import re
 import sys
 from typing import List, Set
+from venv import logger
 from fuzzywuzzy import process, fuzz
 from nltk import download as nltk_download
 from nltk.corpus import stopwords, wordnet
@@ -33,6 +34,7 @@ nltk_download('stopwords', quiet=True)
 nltk_download('punkt_tab', quiet=True)
 nltk_download('wordnet', quiet=True)
 nltk_download('omw-1.4', quiet=True)
+nltk_download('averaged_perceptron_tagger_eng', quiet=True)
 
 def process_args() -> argparse.Namespace:
     """Process command-line arguments
@@ -129,6 +131,7 @@ def condense_skill(skill_list: List[str], threshold: int = 80) -> List[str]:
     Returns:
         List[str]: List of condensed skills
     """
+    logging.info('Condensing skills...')
     condensed_skills = []
     for skill in skill_list:
         match = process.extractOne(skill, condensed_skills, scorer=fuzz.ratio)
@@ -178,6 +181,7 @@ def main(args: argparse.Namespace) -> None:
         logging.error(exc)
         sys.exit(1)
     lemmatizer = WordNetLemmatizer()
+    logger.info('Normalizing skills...')
     normalized_skills = [normalize_skill(skill,lemmatizer) for skill in skills]
     condensed_skills_list = condense_skill(normalized_skills)
     try:
