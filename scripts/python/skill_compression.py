@@ -16,6 +16,7 @@ from typing import List, Set
 from fuzzywuzzy import process, fuzz
 from nltk import download as nltk_download
 from nltk.corpus import stopwords, wordnet
+from nltk.stem import WordNetLemmatizer
 from nltk.tokenize import word_tokenize
 from nltk.tag import pos_tag
 
@@ -25,6 +26,13 @@ logging.basicConfig(format="{asctime} - {levelname} - {message}",
                     datefmt="%Y-%m-%d %H:%M:%S",
                     handlers=[logging.StreamHandler(sys.stdout)],
                     level=logging.INFO)
+
+# Download NLTK resources
+logging.info('Downloading NLTK resources...')
+nltk_download('stopwords', quiet=True)
+nltk_download('punkt_tab', quiet=True)
+nltk_download('wordnet', quiet=True)
+nltk_download('omw-1.4', quiet=True)
 
 def process_args() -> argparse.Namespace:
     """Process command-line arguments
@@ -53,15 +61,6 @@ def sanitize_args(args: argparse.Namespace) -> argparse.Namespace:
     args.src_skill_file = os.path.realpath(args.src_skill_file)
     args.dest_skill_file = os.path.realpath(args.dest_skill_file)
     return args
-
-def download_nltk_resources() -> None:
-    """Download NLTK resources
-    """
-    logging.info('Downloading NLTK stopwords...')
-    nltk_download('stopwords', quiet=True)
-    nltk_download('punkt_tab', quiet=True)
-    nltk_download('wordnet', quiet=True)
-    nltk_download('omw-1.4', quiet=True)
 
 def ingest_skills(skills_file: str, stop_words: Set[str]) -> List[str]:
     """Ingest skills from a file, splitting sentences on commas and semicolons
@@ -155,7 +154,7 @@ def get_wordnet_pos(word) -> str:
     }
     return tag_dict.get(tag, wordnet.NOUN)
 
-def normalize_skill(skill: str, lemmatizer=wordnet.WordNetLemmatizer()) -> str:
+def normalize_skill(skill: str, lemmatizer: WordNetLemmatizer) -> str:
     """Normalize a skill by stemming and removing stopwords
     Args:
         skill (str): Skill to normalize
@@ -172,14 +171,14 @@ def main(args: argparse.Namespace) -> None:
         args (argparse.Namespace): Command-line arguments
     """
     args = sanitize_args(args)
-    download_nltk_resources()
     stop_words = set(stopwords.words('english'))
     try:
         skills = ingest_skills(args.src_skill_file, stop_words)
     except FileNotFoundError as exc:
         logging.error(exc)
         sys.exit(1)
-    normalized_skills = [normalize_skill(skill) for skill in skills]
+    lemmatizer = WordNetLemmatizer()
+    normalized_skills = [normalize_skill(skill,lemmatizer) for skill in skills]
     condensed_skills_list = condense_skill(normalized_skills)
     try:
         output_skills(condensed_skills_list, args.dest_skill_file)
