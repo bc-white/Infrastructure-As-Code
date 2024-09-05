@@ -85,8 +85,9 @@ def ingest_skills(skills_file: str, stop_words: Set[str]) -> List[str]:
     try:
         with open(skills_file, 'r', encoding='utf-8') as src_skills:
             for line in src_skills:
+                coalesced_line = coalesce_brands(line.lower().replace(';', ','))
                 # Split on commas, but not within parentheses
-                for skill in re.split(r',\s*(?![^()]*\))',coalesce_brands(line.replace(';', ','))):
+                for skill in re.split(r',\s*(?![^()]*\))',coalesced_line):
                     skills.append(remove_stopwords(skill.strip(), stop_words))
         return deduplicate_skills(skills)
     except FileNotFoundError as exc:
@@ -187,11 +188,13 @@ def coalesce_brands(skill: str) -> str:
         String: Skill with brands coalesced
     """
     # Microsoft
-    skill.replace('Microsoft Windows', MICROSOFT_WINDOWS)
-    skill.replace('MS Windows', MICROSOFT_WINDOWS)
-    skill.replace('Microsoft Server', MICROSOFT_WINDOWS_SERVER)
-    skill.replace('Microsoft Windows Server', MICROSOFT_WINDOWS_SERVER)
-    skill.replace('MS Windows Server', MICROSOFT_WINDOWS_SERVER)
+    microsoft_server_list = ['microsoft windows server', 'microsoft server', 'ms windows server']
+    microsoft_list = ['microsoft windows', 'ms windows']
+    for win_version, srv_version in zip(microsoft_list, microsoft_server_list):
+        if win_version in skill:
+            return skill.replace(win_version, MICROSOFT_WINDOWS)
+        if srv_version in skill:
+            return skill.replace(srv_version, MICROSOFT_WINDOWS_SERVER)
     return skill
 
 def main(args: argparse.Namespace) -> None:
