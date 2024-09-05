@@ -137,7 +137,9 @@ def condense_skill(skill_list: List[str], threshold: int = 80) -> tuple:
     condensed_skills = []
     removed_skills = []
     for skill in skill_list:
-        if (skill.isspace() or skill.strip(string.punctuation).isspace() or skill == ''):
+        # Remove punctuation from skill as test skill for testing.
+        test_skill = skill.translate(str.maketrans('', '',string.punctuation))
+        if (skill.isspace() or skill == '' or test_skill.isspace() or test_skill == ''):
             continue
         match = process.extractOne(skill, condensed_skills, scorer=fuzz.ratio)
         if match and match[1] >= threshold:
