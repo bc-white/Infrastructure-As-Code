@@ -2,8 +2,9 @@
 This script accepts a list of skills as input and emits a list
 of condensed root skills (e.g., 'java' instead of 'java programming').
 
-Ensure you have installed the NLTK library:
+Ensure you have installed the NLTK library and the fuzzywuzzy library:
     pip install nltk
+    pip install fuzzywuzzy
 
 Usage: python skill_condenser.py < src_skills.txt > < dest_skills.txt >
 '''
