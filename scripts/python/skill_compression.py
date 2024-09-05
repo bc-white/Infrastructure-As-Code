@@ -135,7 +135,7 @@ def condense_skill(skill_list: List[str], threshold: int = 80) -> List[str]:
     condensed_skills = []
     for skill in skill_list:
         match = process.extractOne(skill, condensed_skills, scorer=fuzz.ratio)
-        if (match <= threshold):
+        if match <= threshold:
             condensed_skills.append(skill)
     return deduplicate_skills(condensed_skills)
 
