@@ -22,6 +22,10 @@ from nltk.stem import WordNetLemmatizer
 from nltk.tokenize import word_tokenize
 from nltk.tag import pos_tag
 
+# Brand Constants
+MICROSOFT_WINDOWS_SERVER = 'Windows Server'
+MICROSOFT_WINDOWS = 'Windows'
+
 # Set up logging
 logging.basicConfig(format="{asctime} - {levelname} - {message}",
                     style="{",
@@ -183,10 +187,11 @@ def coalesce_brands(skill: str) -> str:
         String: Skill with brands coalesced
     """
     # Microsoft
-    skill.replace('Microsoft Windows', 'Windows')
-    skill.replace('MS Windows', 'Windows')
-    skill.replace('Microsoft Windows Server', 'Windows Server')
-    skill.replace('MS Windows Server', 'Windows Server')
+    skill.replace('Microsoft Windows', MICROSOFT_WINDOWS)
+    skill.replace('MS Windows', MICROSOFT_WINDOWS)
+    skill.replace('Microsoft Server', MICROSOFT_WINDOWS_SERVER)
+    skill.replace('Microsoft Windows Server', MICROSOFT_WINDOWS_SERVER)
+    skill.replace('MS Windows Server', MICROSOFT_WINDOWS_SERVER)
     return skill
 
 def main(args: argparse.Namespace) -> None:
