@@ -185,9 +185,10 @@ def main(args: argparse.Namespace) -> None:
     logger.info('Normalizing skills...')
     normalized_skills = [normalize_skill(skill,lemmatizer) for skill in skills]
     condensed_skills_list, removed_skills_list = condense_skill(normalized_skills)
+    removed_skill_file = (os.path.dirname(args.dest_skill_file)) + '/removed_skills.txt'
     try:
         output_skills(condensed_skills_list, args.dest_skill_file)
-        output_skills(removed_skills_list, (os.path.dirname(args.dest_skill_file)) + '/removed_skills.txt')
+        output_skills(removed_skills_list, removed_skill_file)
     except PermissionError as exc:
         logging.error(exc)
         sys.exit(1)
