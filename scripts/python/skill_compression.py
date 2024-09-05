@@ -123,7 +123,7 @@ def deduplicate_skills(skills: List[str]) -> List[str]:
     logging.info('Deduplicating skills...')
     return list({k: None for k in skills}.keys())
 
-def condense_skill(skill_list: List[str], threshold: int = 80) -> List[str]:
+def condense_skill(skill_list: List[str], threshold: int = 80) -> tuple:
     """Condense a skill through deduplication using fuzzy matching
     Args:
         skill_list (List[str]): List of skills
@@ -133,11 +133,14 @@ def condense_skill(skill_list: List[str], threshold: int = 80) -> List[str]:
     """
     logging.info('Condensing skills...')
     condensed_skills = []
+    removed_skills = []
     for skill in skill_list:
         match = process.extractOne(skill, condensed_skills, scorer=fuzz.ratio)
         if match <= threshold:
             condensed_skills.append(skill)
-    return deduplicate_skills(condensed_skills)
+        else:
+            removed_skills.append(skill)
+    return deduplicate_skills(condensed_skills),deduplicate_skills(removed_skills)
 
 def get_wordnet_pos(word) -> str:
     """Map POS tag to first character of WordNet POS tag
@@ -181,9 +184,10 @@ def main(args: argparse.Namespace) -> None:
     lemmatizer = WordNetLemmatizer()
     logger.info('Normalizing skills...')
     normalized_skills = [normalize_skill(skill,lemmatizer) for skill in skills]
-    condensed_skills_list = condense_skill(normalized_skills)
+    condensed_skills_list, removed_skills_list = condense_skill(normalized_skills)
     try:
         output_skills(condensed_skills_list, args.dest_skill_file)
+        output_skills(condensed_skills_list, '/'.join(os.path.dirname(args.dest_skill_file)) + '/removed_skills.txt')
     except PermissionError as exc:
         logging.error(exc)
         sys.exit(1)
