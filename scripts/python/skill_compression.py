@@ -82,7 +82,7 @@ def ingest_skills(skills_file: str, stop_words: Set[str]) -> List[str]:
         with open(skills_file, 'r', encoding='utf-8') as src_skills:
             for line in src_skills:
                 # Split on commas, but not within parentheses
-                for skill in re.split(r',\s*(?![^()]*\))',line.strip().replace(';', ',')):
+                for skill in re.split(r',\s*(?![^()]*\))',coalesce_brands(line.replace(';', ','))):
                     skills.append(remove_stopwords(skill.strip(), stop_words))
         return deduplicate_skills(skills)
     except FileNotFoundError as exc:
@@ -174,6 +174,20 @@ def normalize_skill(skill: str, lemmatizer: WordNetLemmatizer) -> str:
     tokens = skill.lower().split()
     lemmatized_tokens = [lemmatizer.lemmatize(token, get_wordnet_pos(token)) for token in tokens]
     return ' '.join(lemmatized_tokens)
+
+def coalesce_brands(skill: str) -> str:
+    """Coalesces well known brands for a skill. For example, 'Microsoft Windows' becomes 'Windows' 
+    Args:
+        skill (String): Skill to coalesce brands for
+    Returns:
+        String: Skill with brands coalesced
+    """
+    # Microsoft
+    skill.replace('Microsoft Windows', 'Windows')
+    skill.replace('MS Windows', 'Windows')
+    skill.replace('Microsoft Windows Server', 'Windows Server')
+    skill.replace('MS Windows Server', 'Windows Server')
+    return skill
 
 def main(args: argparse.Namespace) -> None:
     """Main function
