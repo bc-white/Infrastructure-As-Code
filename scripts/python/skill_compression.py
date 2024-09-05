@@ -139,7 +139,7 @@ def condense_skill(skill_list: List[str], threshold: int = 80) -> List[str]:
             condensed_skills.append(match[0])
         else:
             condensed_skills.append(skill)
-    return condensed_skills
+    return deduplicate_skills(condensed_skills)
 
 def get_wordnet_pos(word) -> str:
     """Map POS tag to first character of WordNet POS tag
