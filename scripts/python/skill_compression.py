@@ -11,6 +11,7 @@ import argparse
 import logging
 import os
 import re
+import string
 import sys
 from typing import List, Set
 from venv import logger
@@ -136,6 +137,8 @@ def condense_skill(skill_list: List[str], threshold: int = 80) -> tuple:
     condensed_skills = []
     removed_skills = []
     for skill in skill_list:
+        if (skill.isspace() or skill.strip(string.punctuation).isspace() or skill == ''):
+            continue
         match = process.extractOne(skill, condensed_skills, scorer=fuzz.ratio)
         if match and match[1] >= threshold:
             removed_skills.append(skill)
