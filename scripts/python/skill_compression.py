@@ -212,7 +212,7 @@ def main(args: argparse.Namespace) -> None:
     lemmatizer = WordNetLemmatizer()
     logger.info('Normalizing skills...')
     normalized_skills = [normalize_skill(skill,lemmatizer) for skill in skills]
-    condensed_skills_list, removed_skills_list = condense_skill(normalized_skills, 65)
+    condensed_skills_list, removed_skills_list = condense_skill(normalized_skills, 80)
     normalize_skill_file = (os.path.dirname(args.dest_skill_file)) + '/normalized_skills.txt'
     removed_skill_file = (os.path.dirname(args.dest_skill_file)) + '/removed_skills.txt'
     try:
