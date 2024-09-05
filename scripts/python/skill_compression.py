@@ -95,6 +95,7 @@ def output_skills(skills: List[str], dest_skills_file: str) -> None:
     """
     logging.info('Outputting skills to %s...', dest_skills_file)
     try:
+        # file deepcode ignore PT: This is handled in the sanitize_args function.
         with open(dest_skills_file, 'w', encoding='utf-8') as dest_skills:
             for skill in skills:
                 dest_skills.write(f'{skill}\n')
