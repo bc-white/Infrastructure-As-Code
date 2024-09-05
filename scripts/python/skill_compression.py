@@ -136,10 +136,10 @@ def condense_skill(skill_list: List[str], threshold: int = 80) -> tuple:
     removed_skills = []
     for skill in skill_list:
         match = process.extractOne(skill, condensed_skills, scorer=fuzz.ratio)
-        if match <= threshold:
-            condensed_skills.append(skill)
-        else:
+        if match and match[1] >= threshold:
             removed_skills.append(skill)
+        else:
+            condensed_skills.append(skill)
     return deduplicate_skills(condensed_skills),deduplicate_skills(removed_skills)
 
 def get_wordnet_pos(word) -> str:
