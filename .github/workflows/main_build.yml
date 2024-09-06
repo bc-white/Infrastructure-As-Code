@@ -29,9 +29,9 @@ jobs:
         name: SonarCloud
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@v4
-              with:
-                fetch-depth: 0 # Shallow clones should be diabled for a better relevancy for analysis
+            # - uses: actions/checkout@v4
+            #   with:
+            #     fetch-depth: 0 # Shallow clones should be diabled for a better relevancy for analysis
             - name: SonarCloudScan
               uses: SonarSource/sonarcloud-github-action@master
               env:
