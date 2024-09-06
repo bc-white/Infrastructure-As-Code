@@ -24,46 +24,45 @@ logging.basicConfig(format="{asctime} - {levelname} - {message}",
 STOPWORDS = set(stopwords.words('english'))
 
 @pytest.fixture()
-def generate_test_list() -> List[str]:
-    '''Set up the required test data.'''
-    logging.info("Setting up test data...")
-    return ['Python','Windows Server 2012 R2','Windows 11', 'MS Windows 10', 'Python and Java']
+def generate_stopword() -> List[tuple]:
+    '''Set up strings with a test words with stop words.'''
+    logging.info("Setting up skill with stop words....")
+    return [('Python and Java', 'Python Java'),
+            ('Python','Python')]
 
 @pytest.fixture()
-def generate_stopword() -> tuple:
-    '''Set up a string with a test word with a stop word.'''
-    logging.info("Setting up skill with stop word....")
-    return 'Python and Java', 'Python Java'
+def generate_branded_skill() -> List[tuple]:
+    '''Set up a strings with a branded skill.'''
+    logging.info("Setting up branded skill....")
+    return [('Microsoft Windows Server', 'Windows Server'),
+            ('Microsoft Windows', 'Windows'),
+            ('MS Windows', 'Windows'),
+            ('MS Windows Server', 'Windows Server'),
+            ('Python', 'Python')]
 
-@pytest.fixture()
-def generate_non_stopword() -> str:
-    '''Set up a string with a test word without a stop word.'''
-    logging.info("Setting up skill without stop word....")
-    return 'Python'
+def test_coalesce_brands(generate_branded_skill) -> None:
+    '''Test the coalesce_brands function.
 
-def test_removal_of_stop_words(generate_stopword) -> None:
+    This test checks that the branded skills are removed from the provided skill.
+
+    Args:
+        generate_branded_skill (List[tuple]): A list of tuples containing the test data and expected outcome.
+    '''
+    logging.info("Testing coalesce_brands...")
+    for skill in generate_branded_skill:
+        assert skill_compression.coalesce_brands(skill[0]) == skill[1]
+
+def test_remove_stopwords(generate_stopword) -> None:
     '''Test the remove_stopwords function.
 
     This test checks that the stop word is removed from the provided skill.
 
     Args:
-        generate_stopword (tuple): A tuple containing the test data and expected outcome.
+        generate_stopword (List[tuple]):  list of tuples containing the test data and expected outcome.
     '''
-    logging.info("Testing remove_stopwords with skill containing stop word...")
-    skill = skill_compression.remove_stopwords(generate_stopword[0], STOPWORDS)
-    assert skill == generate_stopword[1]
-
-def test_removal_of_stop_words_(generate_non_stopword) -> None:
-    '''Test the remove_stopwords function.
-
-    This test checks that the stop word is removed from the provided skill.
-
-    Args:
-        generate_stopword (str): A string containing the test data.
-    '''
-    logging.info("Testing remove_stopwords without skill containing stop word...")
-    skill = skill_compression.remove_stopwords(generate_non_stopword, STOPWORDS)
-    assert skill == generate_non_stopword
+    logging.info("Testing remove_stopwords...")
+    for skill in generate_branded_skill:
+        assert skill_compression.remove_stopwords(skill[0]) == skill[1]
 
 if __name__ == "__main__":
     pytest.main()
