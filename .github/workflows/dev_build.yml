@@ -42,7 +42,7 @@ jobs:
               uses: actions/download-artifact@master
               with:
                 name: coverage-report
-                path: ./python_coverage_report.xml
+                path: ./coverage_report
             - name: SonarCloudScan
               uses: SonarSource/sonarcloud-github-action@master
               env:
