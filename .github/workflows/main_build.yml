@@ -28,7 +28,7 @@ jobs:
               pytest --cov-report xml:python_coverage_report.xml --cov=scripts scripts/python/tests/test_skill_compression.py
           - name: Emit coverage report
             id: coverage
-            run: cat python_coverage_report.xml >> "$GITHUB_OUTPUT"
+            run: cat python_coverage_report.xml | base64 >> "$GITHUB_OUTPUT"
     SonarCloud:
         needs: RunTests
         name: SonarCloud
@@ -38,7 +38,7 @@ jobs:
               with:
                 fetch-depth: 0 # Shallow clones should be diabled for a better relevancy for analysis
             - name: Load Coverage Report
-              run: echo ${{ needs.RunTests.outputs.coverage-report }} >> coverage_report.xml
+              run: echo ${{ needs.RunTests.outputs.coverage-report }} | base64 >> coverage_report.xml
             - name: SonarCloudScan
               uses: SonarSource/sonarcloud-github-action@master
               env:
