@@ -5,11 +5,29 @@ on:
         branches:
             - development
 jobs:
+    RunTests:
+        name: Run Tests
+        runs-on: ubuntu-latest
+        steps:
+          - uses: actions/checkout@v4
+          - name: Set up Python
+            uses: actions/setup-python@v5
+            with:
+              python-version: '3.12.x'
+          - name: Display Python version
+            run: python -c "import sys; print(sys.version)"
+          - name: Install dependencies
+            run: |
+              python -m pip install --upgrade pip
+              pip install -r scripts/python/requirements.txt
+          - name: Run Tests
+            run:
+              pytest scripts/python/tests/test_skill_compression.py
     SonarCloud:
         name: SonarCloud
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@v3
+            - uses: actions/checkout@v4
               with:
                 fetch-depth: 0 # Shallow clones should be diabled for a better relevancy for analysis
             - name: SonarCloudScan
