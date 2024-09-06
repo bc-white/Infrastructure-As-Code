@@ -24,6 +24,12 @@ jobs:
             run: |
               export PYTHONPATH=$PYTHONPATH:$(pwd)
               pytest --cov-report xml:coverage_report.xml --cov=scripts scripts/python/tests/test_skill_compression.py
+          - name: Emit coverage report
+            uses: actions/upload-artifact@v4
+            with:
+              name: coverage-report
+              path: ./python_coverage_report.xml
+              retention-days: 1
     SonarCloud:
         needs: RunTests
         name: SonarCloud
@@ -32,6 +38,11 @@ jobs:
             - uses: actions/checkout@v4
               with:
                 fetch-depth: 0 # Shallow clones should be diabled for a better relevancy for analysis
+            - name: Load Coverage Report
+              uses: actions/download-artifact@master
+              with:
+                name: coverage-report
+                path: ./python_coverage_report.xml
             - name: SonarCloudScan
               uses: SonarSource/sonarcloud-github-action@master
               env:
