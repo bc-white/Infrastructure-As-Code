@@ -28,7 +28,7 @@ jobs:
               pytest --cov-report xml:python_coverage_report.xml --cov=scripts scripts/python/tests/test_skill_compression.py
           - name: Emit coverage report
             id: coverage
-            run: echo "coverage=$(cat python_coverage_report.xml | base64)"" >> "$GITHUB_OUTPUT"
+            run: echo "coverage=$(cat python_coverage_report.xml | base64)" >> "$GITHUB_OUTPUT"
     SonarCloud:
         needs: RunTests
         name: SonarCloud
