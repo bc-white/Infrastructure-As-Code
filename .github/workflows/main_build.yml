@@ -1,8 +1,5 @@
 name: Main Build
 on:
-    push:
-        branches:
-            - main
     pull_request:
         types: [opened, synchronize, reopened]
         branches:
@@ -25,16 +22,17 @@ jobs:
               pip install -r scripts/python/requirements.txt
           - name: Run Tests
             run:
+              export PYTHONPATH=$PYTHONPATH:$(pwd)
               pytest scripts/python/tests/test_skill_compression.py
-    sonarCloud:
+    SonarCloud:
         name: SonarCloud
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
               with:
-                fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
-            - name: SonarCloud Scan
+                fetch-depth: 0 # Shallow clones should be diabled for a better relevancy for analysis
+            - name: SonarCloudScan
               uses: SonarSource/sonarcloud-github-action@master
               env:
-                GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}} # Needed to get PR information, if any
+                GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
                 SONAR_TOKEN: ${{secrets.SONAR_TOKEN}}
