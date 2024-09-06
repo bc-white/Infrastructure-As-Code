@@ -61,7 +61,7 @@ def test_remove_stopwords(generate_stopword) -> None:
         generate_stopword (List[tuple]):  list of tuples containing the test data and expected outcome.
     '''
     logging.info("Testing remove_stopwords...")
-    for skill in generate_branded_skill:
+    for skill in generate_stopword:
         assert skill_compression.remove_stopwords(skill[0]) == skill[1]
 
 if __name__ == "__main__":
