@@ -171,8 +171,7 @@ terraform.rc
 # Ignore log files
 *.log
 
-# Ignore Test Files
+# Ignore Python Files
 .pytest_cache/
-
-# Ignore Python Cache
 __pycache__/
+.venv/
