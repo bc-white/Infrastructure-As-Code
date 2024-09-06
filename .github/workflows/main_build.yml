@@ -23,7 +23,8 @@ jobs:
           - name: Run Tests
             run: |
               export PYTHONPATH=$PYTHONPATH:$(pwd)
-              pytest --cov-report xml scripts/python/tests/test_skill_compression.py
+              pytest --cov-report xml:coverage_report.xml scripts/python/tests/test_skill_compression.py
+              cat coverage_report.xml
     SonarCloud:
         needs: RunTests
         name: SonarCloud
