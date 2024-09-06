@@ -26,7 +26,7 @@ jobs:
           - name: Run Tests
             run: |
               export PYTHONPATH=$PYTHONPATH:$(pwd)
-              pytest --cov-report xml:python_coverage_report.xml scripts/python/tests/test_skill_compression.py
+              pytest --cov-report xml:python_coverage_report.xml --cov=. scripts/python/tests/test_skill_compression.py
           - name: Emit coverage report
             uses: actions/upload-artifact@v4
             with:
