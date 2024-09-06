@@ -21,9 +21,11 @@ jobs:
               python -m pip install --upgrade pip
               pip install -r scripts/python/requirements.txt
           - name: Run Tests
-            run:
-              pytest scripts/python/tests/test_skill_compression.py
+            run: |
+              export PYTHONPATH=$PYTHONPATH:$(pwd)
+              pytest --cov-report xml scripts/python/tests/test_skill_compression.py
     SonarCloud:
+        needs: RunTests
         name: SonarCloud
         runs-on: ubuntu-latest
         steps:

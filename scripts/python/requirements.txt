@@ -1,3 +1,4 @@
 fuzzywuzzy
 nltk
 pytest
+ptyest-cov
