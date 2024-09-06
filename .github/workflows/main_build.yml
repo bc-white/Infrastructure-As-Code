@@ -21,7 +21,7 @@ jobs:
               python -m pip install --upgrade pip
               pip install -r scripts/python/requirements.txt
           - name: Run Tests
-            run:
+            run: |
               export PYTHONPATH=$PYTHONPATH:$(pwd)
               pytest scripts/python/tests/test_skill_compression.py
     SonarCloud:
