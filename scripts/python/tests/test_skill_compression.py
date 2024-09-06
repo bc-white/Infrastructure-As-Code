@@ -11,8 +11,8 @@ import logging
 import sys
 from typing import List
 import pytest
-import skill_compression
 from nltk.corpus import stopwords
+from scripts.python import skill_compression
 
 # Set up logging
 logging.basicConfig(format="{asctime} - {levelname} - {message}",
