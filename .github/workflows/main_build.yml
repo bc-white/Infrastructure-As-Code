@@ -8,8 +8,6 @@ jobs:
     RunTests:
         name: Run Tests
         runs-on: ubuntu-latest
-        outputs:
-            coverage-report: ${{ steps.coverage.outputs.coverage-report }}
         steps:
           - uses: actions/checkout@v4
           - name: Set up Python
@@ -27,8 +25,11 @@ jobs:
               export PYTHONPATH=$PYTHONPATH:$(pwd)
               pytest --cov-report xml:python_coverage_report.xml --cov=scripts scripts/python/tests/test_skill_compression.py
           - name: Emit coverage report
-            id: coverage
-            run: echo "coverage=$(cat python_coverage_report.xml | base64)" >> "$GITHUB_OUTPUT"
+            uses: actions/upload-artifact@v4
+            with:
+              name: coverage-report
+              path: ./python_coverage_report.xml
+              retention-days: 1
     SonarCloud:
         needs: RunTests
         name: SonarCloud
@@ -38,7 +39,10 @@ jobs:
               with:
                 fetch-depth: 0 # Shallow clones should be diabled for a better relevancy for analysis
             - name: Load Coverage Report
-              run: echo "${{ needs.RunTests.outputs.coverage-report }}" | base64 --decode >> coverage_report.xml
+              uses: actions/download-artifact@master
+              with:
+                name: coverage-report
+                path: ./python_coverage_report.xml
             - name: SonarCloudScan
               uses: SonarSource/sonarcloud-github-action@master
               env:
