@@ -84,7 +84,7 @@ def generate_condense_skills() -> List[tuple]:
     logging.info("Setting up condense skills....")
     return [(['Python', 'Java', 'C++'], ['Python', 'Java', 'C++'],[]),
             (['Python', 'Java', 'Python coding'], ['Python', 'Java','Python coding'],[]),
-            (['Java','Javascript','Javascripting'], ['Java','Javascript'], ['Javascripting']),
+            (['Java','Javascript','Javascripting', ' '], ['Java','Javascript'], ['Javascripting']),
             (['Microsoft Windows Server','Microsoft Windows Server 2003 R2'], ['Microsoft Windows Server'], ['Microsoft Windows Server 2003 R2'])]
 
 def test_coalesce_brands(generate_branded_skill) -> None:
