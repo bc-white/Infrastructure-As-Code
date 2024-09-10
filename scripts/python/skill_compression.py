@@ -161,7 +161,7 @@ def get_wordnet_pos(word) -> str:
     Returns:
         str: First character of WordNet POS tag
     """
-    tag = pos_tag([word])[0][1].upper()
+    tag = pos_tag([word])[0][1][0].upper()
     tag_dict = {
         'J': wordnet.ADJ,
         'N': wordnet.NOUN,

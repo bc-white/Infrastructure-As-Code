@@ -61,9 +61,6 @@ def test_coalesce_brands(generate_branded_skill) -> None:
     '''
     logging.info("Testing coalesce_brands...")
     for skill in generate_branded_skill:
-        print("Input: " + skill[0])
-        print("Expected result: " + skill[1])
-        print(skill_compression.coalesce_brands(skill[0]))
         assert skill_compression.coalesce_brands(skill[0]) == skill[1]
 
 def test_remove_stopwords(generate_stopword) -> None:
