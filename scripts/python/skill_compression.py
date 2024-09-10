@@ -161,14 +161,14 @@ def get_wordnet_pos(word) -> str:
     Returns:
         str: First character of WordNet POS tag
     """
-    tag = pos_tag([word])[0][1][0].upper()
+    tag = pos_tag([word])[0][1].upper()
     tag_dict = {
         'J': wordnet.ADJ,
         'N': wordnet.NOUN,
         'V': wordnet.VERB,
         'R': wordnet.ADV
     }
-    return tag_dict.get(tag, wordnet.NOUN)
+    return tag_dict.get(tag, wordnet.NOUN).upper()
 
 def normalize_skill(skill: str, lemmatizer: WordNetLemmatizer) -> str:
     """Normalize a skill by stemming and removing stopwords
@@ -192,10 +192,10 @@ def coalesce_brands(skill: str) -> str:
     microsoft_server_list = ['microsoft windows server', 'microsoft server', 'ms windows server']
     microsoft_list = ['microsoft windows', 'ms windows']
     for win_version, srv_version in zip(microsoft_list, microsoft_server_list):
-        if win_version in skill:
-            return skill.replace(win_version, MICROSOFT_WINDOWS)
         if srv_version in skill:
             return skill.replace(srv_version, MICROSOFT_WINDOWS_SERVER)
+        if win_version in skill:
+            return skill.replace(win_version, MICROSOFT_WINDOWS)
     return skill
 
 def main(args: argparse.Namespace) -> None:

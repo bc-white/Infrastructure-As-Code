@@ -24,6 +24,16 @@ logging.basicConfig(format="{asctime} - {levelname} - {message}",
 STOPWORDS = set(stopwords.words('english'))
 
 @pytest.fixture()
+def generate_wordnet_pos() -> List[tuple]:
+    '''Set up strings with a test word and the expected part of speech.'''
+    logging.info("Setting up wordnet pos....")
+    return [('Python', 'N'),
+            ('Java', 'N'),
+            ('Administered', 'V'),
+            ('Expertly', 'R'),
+            ('Massive', 'A')]
+
+@pytest.fixture()
 def generate_stopword() -> List[tuple]:
     '''Set up strings with a test words with stop words.'''
     logging.info("Setting up skill with stop words....")
@@ -62,7 +72,19 @@ def test_remove_stopwords(generate_stopword) -> None:
     '''
     logging.info("Testing remove_stopwords...")
     for skill in generate_stopword:
-        assert skill_compression.remove_stopwords(skill[0]) == skill[1]
+        assert skill_compression.remove_stopwords(skill[0], STOPWORDS) == skill[1]
+
+def test_get_wordnet_pos(generate_wordnet_pos) -> None:
+    '''Test the get_wordnet_pos function.
+
+    This test checks that the part of speech is correctly identified.
+
+    Args:
+        generate_wordnet_pos (List[tuple]): list of tuples containing the test data and expected outcome.
+    '''
+    logging.info("Testing get_wordnet_pos...")
+    for skill in generate_wordnet_pos:
+        assert skill_compression.get_wordnet_pos(skill[0]) == skill[1]
 
 if __name__ == "__main__":
     pytest.main()
