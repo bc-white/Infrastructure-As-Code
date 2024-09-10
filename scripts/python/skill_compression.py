@@ -191,9 +191,10 @@ def coalesce_brands(skill: str) -> str:
     # Microsoft
     microsoft_server_list = ['microsoft windows server', 'microsoft server', 'ms windows server']
     microsoft_list = ['microsoft windows', 'ms windows']
-    for win_version, srv_version in zip(microsoft_list, microsoft_server_list):
+    for srv_version in microsoft_server_list:
         if srv_version in skill:
             return skill.replace(srv_version, MICROSOFT_WINDOWS_SERVER)
+    for win_version in microsoft_list:
         if win_version in skill:
             return skill.replace(win_version, MICROSOFT_WINDOWS)
     return skill

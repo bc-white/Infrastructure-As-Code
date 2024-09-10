@@ -44,11 +44,11 @@ def generate_stopword() -> List[tuple]:
 def generate_branded_skill() -> List[tuple]:
     '''Set up a strings with a branded skill.'''
     logging.info("Setting up branded skill....")
-    return [('Microsoft Windows Server', 'Windows Server'),
-            ('Microsoft Windows', 'Windows'),
-            ('MS Windows', 'Windows'),
-            ('MS Windows Server', 'Windows Server'),
-            ('Python', 'Python')]
+    return [('microsoft windows server', 'Windows Server'),
+            ('microsoft windows', 'Windows'),
+            ('ms windows', 'Windows'),
+            ('ms windows server', 'Windows Server'),
+            ('python', 'python')]
 
 def test_coalesce_brands(generate_branded_skill) -> None:
     '''Test the coalesce_brands function.
@@ -56,10 +56,14 @@ def test_coalesce_brands(generate_branded_skill) -> None:
     This test checks that the branded skills are removed from the provided skill.
 
     Args:
-        generate_branded_skill (List[tuple]): A list of tuples containing the test data and expected outcome.
+        generate_branded_skill (List[tuple]): A list of tuples containing the test
+                                              data and expected outcome.
     '''
     logging.info("Testing coalesce_brands...")
     for skill in generate_branded_skill:
+        print("Input: " + skill[0])
+        print("Expected result: " + skill[1])
+        print(skill_compression.coalesce_brands(skill[0]))
         assert skill_compression.coalesce_brands(skill[0]) == skill[1]
 
 def test_remove_stopwords(generate_stopword) -> None:
@@ -68,7 +72,8 @@ def test_remove_stopwords(generate_stopword) -> None:
     This test checks that the stop word is removed from the provided skill.
 
     Args:
-        generate_stopword (List[tuple]):  list of tuples containing the test data and expected outcome.
+        generate_stopword (List[tuple]):  list of tuples containing the test data
+                                          and expected outcome.
     '''
     logging.info("Testing remove_stopwords...")
     for skill in generate_stopword:
@@ -80,7 +85,8 @@ def test_get_wordnet_pos(generate_wordnet_pos) -> None:
     This test checks that the part of speech is correctly identified.
 
     Args:
-        generate_wordnet_pos (List[tuple]): list of tuples containing the test data and expected outcome.
+        generate_wordnet_pos (List[tuple]): list of tuples containing the test data
+                                            and expected outcome.
     '''
     logging.info("Testing get_wordnet_pos...")
     for skill in generate_wordnet_pos:
