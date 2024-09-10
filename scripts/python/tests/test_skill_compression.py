@@ -8,7 +8,6 @@ Ensure you have installed the NLTK and fuzzywuzzy library as well as pytest:
 '''
 
 import logging
-import re
 import sys
 from typing import List
 import pytest
