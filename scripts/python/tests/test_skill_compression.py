@@ -8,6 +8,7 @@ Ensure you have installed the NLTK and fuzzywuzzy library as well as pytest:
 '''
 
 import logging
+import os
 import sys
 from typing import List
 import pytest
@@ -23,9 +24,16 @@ logging.basicConfig(format="{asctime} - {levelname} - {message}",
                     level=logging.INFO)
 
 STOPWORDS = set(stopwords.words('english'))
-CONTENT = '''Python
-             Java
-             Microsoft Windows Server'''
+CONTENT = "Python\nJava\nMicrosoft Windows Server"
+
+@pytest.fixture()
+def generate_skill_output(tmp_path) -> tuple:
+    '''Set up a test file with strings..'''
+    logging.info("Setting up test file....")
+    temp_dir = tmp_path / "output"
+    temp_dir.mkdir()
+    temp_file = temp_dir / "test_out.txt"
+    return (temp_file, ['Python', 'Java', 'Windows Server'], "Python\nJava\nWindows Server\n")
 
 @pytest.fixture()
 def generate_test_file(tmp_path) -> tuple:
@@ -179,6 +187,19 @@ def test_ingest_skills(generate_test_file):
     '''
     logging.info("Testing ingest_skills...")
     assert skill_compression.ingest_skills(generate_test_file[0],STOPWORDS) == generate_test_file[1]
+
+def test_output_skills(generate_skill_output) -> None:
+    '''Test the output_skills function.
+
+    This test checks that the skills are output correctly.
+
+    Args:
+        generate_skill_output (List[tuple]): list of tuples containing the test
+                                             data and expected outcome.
+    '''
+    logging.info("Testing output_skills...")
+    skill_compression.output_skills(generate_skill_output[1], generate_skill_output[0])
+    assert generate_skill_output[0].read_text() == generate_skill_output[2]
 
 if __name__ == "__main__":
     pytest.main()
