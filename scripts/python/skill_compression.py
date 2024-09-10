@@ -131,7 +131,7 @@ def deduplicate_skills(skills: List[str]) -> List[str]:
     logging.info('Deduplicating skills...')
     return list({k: None for k in skills}.keys())
 
-def condense_skill(skill_list: List[str], threshold: int = 80) -> tuple:
+def condense_skills(skill_list: List[str], threshold: int = 80) -> tuple:
     """Condense a skill through deduplication using fuzzy matching
     Args:
         skill_list (List[str]): List of skills
@@ -168,7 +168,7 @@ def get_wordnet_pos(word) -> str:
         'V': wordnet.VERB,
         'R': wordnet.ADV
     }
-    return tag_dict.get(tag, wordnet.NOUN).upper()
+    return tag_dict.get(tag, wordnet.NOUN)
 
 def normalize_skill(skill: str, lemmatizer: WordNetLemmatizer) -> str:
     """Normalize a skill by stemming and removing stopwords
@@ -214,7 +214,7 @@ def main(args: argparse.Namespace) -> None:
     lemmatizer = WordNetLemmatizer()
     logger.info('Normalizing skills...')
     normalized_skills = [normalize_skill(skill,lemmatizer) for skill in skills]
-    condensed_skills_list, removed_skills_list = condense_skill(normalized_skills, 80)
+    condensed_skills_list, removed_skills_list = condense_skills(normalized_skills, 80)
     normalize_skill_file = (os.path.dirname(args.dest_skill_file)) + '/normalized_skills.txt'
     removed_skill_file = (os.path.dirname(args.dest_skill_file)) + '/removed_skills.txt'
     try:
