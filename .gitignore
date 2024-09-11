@@ -167,3 +167,11 @@ terraform.rc
 
 # Ignore Node Modules
 *.node_modules
+
+# Ignore log files
+*.log
+
+# Ignore Python Files
+.pytest_cache/
+__pycache__/
+.venv/

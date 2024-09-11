@@ -1,0 +1,4 @@
+fuzzywuzzy
+nltk
+pytest
+pytest-cov
