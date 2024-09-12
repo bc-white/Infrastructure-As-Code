@@ -9,7 +9,7 @@ terraform {
   backend "s3" {
     region  = "us-east-1"
     bucket  = "bcwhite-terraform-state"
-    key     = "tf-state
+    key     = "tf-state"
   }
 }
 
@@ -17,5 +17,6 @@ provider "aws" {
   region  = "us-east-1"
 }
 
-terraform {
+module "monitored_aws_account" {
+    source  = "./modules/monitored_aws_account"
 }

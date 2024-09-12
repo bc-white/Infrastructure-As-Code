@@ -12,6 +12,6 @@ provider "aws" {
   region  = "us-east-1"
 }
 
-resource "aws_iam_group" "console_group" {
-  name = "console"
+resource "aws_iam_group" "aws_console_access" {
+  name = "aws_console_access"
 }
