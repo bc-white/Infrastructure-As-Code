@@ -133,6 +133,9 @@ qodana.yaml
 *.tfstate
 *.tfstate.*
 
+# .tfvars files
+*.tfvars
+
 # .lock files
 *.terraform.lock.hcl
 
