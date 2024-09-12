@@ -40,10 +40,3 @@ resource "aws_sns_topic_subscription" "email_admin_notifications_subscription" {
   protocol  = "email"
   endpoint  = each.value
 }
-
-resource "aws_sns_topic_subscription" "sms_admin_notifications_subscription" {
-  for_each = toset(var.budget_alert_phone_numbers)
-  topic_arn = aws_sns_topic.admin_notifications.arn
-  protocol  = "sms"
-  endpoint  = each.value
-}
