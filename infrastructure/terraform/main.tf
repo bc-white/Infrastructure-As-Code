@@ -26,7 +26,8 @@ module "monitored_aws_account" {
     budget_alert_phone_numbers      = ["+17038012913"]
     budget_alert_threshold_daily    = 25
     budget_alert_threshold_monthly  = 75
-    budget_amount_daily             = 1.0
-    budget_amount_monthly           = 5.0
+    budget_amount_daily             = 0.5
+    budget_amount_monthly           = 1.0
     enviroment                      = "dev"
+    region                          = "us-east-1"
 }

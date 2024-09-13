@@ -8,30 +8,17 @@ terraform {
   required_version = "~> 1.9.0"
 }
 
+data "aws_caller_identity" "current" {}
+
 resource "aws_sns_topic" "admin_notifications" {
   display_name = "Admin Notifications"
-  kms_master_key_id = "alias/aws/sns"
+  kms_master_key_id = aws_kms_key.sns_encryption_key.arn
   name              = "admin-notifications"
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Sid: "Allow Budget Connections To SNS",
-        Effect = "Allow"
-        Principal = "*"
-        Action = "sns:Publish"
-        Resource = "arn:aws:sns:${data.aws_caller_identity.current.id}:${data.aws_caller_identity.current.id}:*"
-        Condition = {
-          StringEquals = {
-            "AWS:SourceOwner" = data.aws_caller_identity.current.account_id
-          },
-          "ArnLike": {
-            "aws:SourceArn": "arn:aws:budgets::${data.aws_caller_identity.current.account_id}:*"
-          }
-        }
-      }
-    ]
-  })
+}
+
+resource "aws_sns_topic_policy" "admin_notifications_policy" {
+  arn =  aws_sns_topic.admin_notifications.arn
+  policy = data.aws_iam_policy_document.admin_notifications_policy.json
 }
 
 resource "aws_sns_topic_subscription" "email_admin_notifications_subscription" {

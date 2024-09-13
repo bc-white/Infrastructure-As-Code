@@ -64,3 +64,13 @@ variable "enviroment" {
     error_message = "The environment must be either dev, test, or prod."
   }
 }
+
+variable "region" {
+  type        = string
+  description = "The AWS region to deploy the monitored account resources"
+  default     = "us-east-1"
+  validation {
+    condition     = can(regex("^(us-east-1|us-west-1|us-west-2|eu-west-1)$", var.region))
+    error_message = "The region must be one of us-east-1, us-west-1, us-west-2, or eu-west-1."
+  }
+}

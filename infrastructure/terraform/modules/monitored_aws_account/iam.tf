@@ -1,8 +1,35 @@
+data "aws_iam_policy_document" "admin_notifications_policy" {
+  statement {
+    sid       = "AllowBudgetsToNotify"
+    actions = [ "SNS:Publish"]
+    effect    = "Allow"
+    resources = [ aws_sns_topic.admin_notifications.arn ]
+    principals {
+      type        = "Service"
+      identifiers = [ "budgets.amazonaws.com" ]
+    }
+  }
+
+  statement {
+    sid      = "Prevent Unencrypted Traffic"
+    actions  = [ "SNS:Publish" ]
+    effect   = "Deny"
+    resources = [ aws_sns_topic.admin_notifications.arn ]
+    principals {
+      type        = "AWS"
+      identifiers = [ "*" ]
+    }
+    condition {
+        test     = "Bool"
+        variable = "sns:Encrypted"
+        values   = [ "false" ]
+    }
+  }
+}
+
 resource "aws_iam_group" "aws_console_access" {
   name = "aws_console_access"
 }
-
-data "aws_caller_identity" "current" {}
 
 module "enforce_mfa" {
   source  = "terraform-module/enforce-mfa/aws"
