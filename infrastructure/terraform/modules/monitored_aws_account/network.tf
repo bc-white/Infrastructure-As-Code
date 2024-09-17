@@ -18,13 +18,13 @@ data "aws_iam_policy_document" "s3_endpoint_policy_document" {
   }
 }
 
-resource "aws_default_vpc" "default_vpc" {
-    tags = {
-        Name = "Default VPC"
-    }
-}
+# resource "aws_default_vpc" "default_vpc" {
+#     tags = {
+#         Name = "Default VPC"
+#     }
+# }
 
-resource "aws_vpc_endpoint" "s3_endpoint" {
-    vpc_id = aws_default_vpc.default_vpc.id
-    service_name = "com.amazonaws.${var.region}.s3"  
-}
+# resource "aws_vpc_endpoint" "s3_endpoint" {
+#     vpc_id = aws_default_vpc.default_vpc.id
+#     service_name = "com.amazonaws.${var.region}.s3"  
+# }
