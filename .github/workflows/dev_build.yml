@@ -46,7 +46,7 @@ jobs:
             - name: Check
               run: cat ./coverage_report/python_coverage_report.xml
             - name: SonarCloudScan
-              uses: SonarSource/sonarcloud-github-action@master
+              uses: SonarSource/sonarqube-scan-action@master
               env:
                 GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
                 SONAR_TOKEN: ${{secrets.SONAR_TOKEN}}
