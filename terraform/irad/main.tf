@@ -3,7 +3,7 @@ terraform {
     required_providers {
         aws = {
             source  = "hashicorp/aws"
-            version = ">= 5.60"
+            version = ">= 5.60.0"
         }
         random = {
             source  = "hashicorp/random"
@@ -44,9 +44,19 @@ data "aws_availability_zones" "available_zones" {
     }
 }
 
+resource "aws_dynamodb_table" "tf_locks" {
+    name         = "tf_locks"
+    billing_mode = "PAY_PER_REQUEST"
+    hash_key     = "LockID"
+    attribute {
+        name = "LockID"
+        type = "S"
+    }
+}
+
 module "tf_state_bucket" {
     source                               = "terraform-aws-modules/s3-bucket/aws"
-    version                              = "~> 2.0"
+    version                              = ">= 4.6.0"
     bucket                               = "irad-terraform-state-${random_string.suffix.result}"
     block_public_acls                    = true
     block_public_policy                  = true
