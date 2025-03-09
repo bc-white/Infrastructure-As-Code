@@ -10,14 +10,14 @@ terraform {
             version = ">= 3.6"
         }
     }
-    # backend "s3" {
-    #     encrypt = true
-    #     region  = "us-east-1"
-    #     bucket  = "irad-terraform-state"
-    #     key     = "tf-state"
-    #     dynamodb_table = "tf_locks"
-    #     profile = "Management-Admin-Permission-Set"
-    # }
+    backend "s3" {
+        encrypt = true
+        region  = "us-east-1"
+        bucket  = "irad-terraform-state-${random_string.suffix.result}"
+        key     = "tf-state"
+        dynamodb_table = "tf_locks"
+        profile = "IRAD-Admin"
+    }
 }
 
 provider "aws" {
