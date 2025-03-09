@@ -13,7 +13,7 @@ terraform {
     backend "s3" {
         encrypt = true
         region  = "us-east-1"
-        bucket  = "irad-terraform-state-${random_string.suffix.result}"
+        bucket  = lower("irad-terraform-state-${random_string.suffix.result}")
         key     = "tf-state"
         dynamodb_table = "tf_locks"
         profile = "IRAD-Admin"
@@ -57,7 +57,7 @@ resource "aws_dynamodb_table" "tf_locks" {
 module "tf_state_bucket" {
     source                               = "terraform-aws-modules/s3-bucket/aws"
     version                              = ">= 4.6.0"
-    bucket                               = "irad-terraform-state-${random_string.suffix.result}"
+    bucket                               = lower("irad-terraform-state-${random_string.suffix.result}")
     block_public_acls                    = true
     block_public_policy                  = true
     server_side_encryption_configuration = {
