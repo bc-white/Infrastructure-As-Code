@@ -13,7 +13,7 @@ terraform {
     backend "s3" {
         encrypt = true
         region  = "us-east-1"
-        bucket  = lower("irad-terraform-state-${random_string.suffix.result}")
+        bucket  = "irad-terraform-state-rsh0"
         key     = "tf-state"
         dynamodb_table = "tf_locks"
         profile = "IRAD-Admin"
@@ -37,6 +37,8 @@ resource "random_string" "suffix" {
     special = false
 }
 
+data "aws_region" "current_region" {}
+data "aws_caller_identity" "current" {}
 data "aws_availability_zones" "available_zones" {
     filter {
         name   = "opt-in-status"
