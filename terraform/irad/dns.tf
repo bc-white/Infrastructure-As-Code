@@ -64,9 +64,10 @@ module "r53_zones" {
 # }
 
 resource "aws_kms_key" "route_53_ksk_kms_key" {
+    customer_master_key_spec = "ECC_NIST_P256"
     description = "KMS key for Route 53 KSK"
     deletion_window_in_days = 7
-    enable_key_rotation = true
+    key_usage = "SIGN_VERIFY"
     tags = {
         Name = "Route 53 KSK KMS Key"
         Environment = "prod"
@@ -76,7 +77,7 @@ resource "aws_kms_key" "route_53_ksk_kms_key" {
 }
 
 resource "aws_kms_alias" "route_53_ksk_kms_key" {
-    name          = "alias/route-53-ksk"
+    name          = "alias/route-53-ksk-key"
     target_key_id = aws_kms_key.route_53_ksk_kms_key.key_id
 }
 
