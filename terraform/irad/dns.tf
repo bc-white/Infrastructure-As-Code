@@ -56,6 +56,18 @@ module "r53_zones" {
     }
 }
 
+module "certificate_manager" {
+    source  = "terraform-aws-modules/acm/aws"
+    domain_name  = "bogartlab.com"
+    zone_id      = module.r53_zones.route53_zone_zone_id["bogartlab.com"]
+    validation_method = "DNS"
+    subject_alternative_names = [ "*.bogartlab.com" ]
+    wait_for_validation = false
+    tags = {
+        Name = "bogartlab.com"
+    }
+}
+
 # module "r53_records" {
 #     source    = "terraform-aws-modules/route53/aws//modules/records"
 #     zone_name = keys(module.r53_zones.route53_zone_zone_id)[0]
