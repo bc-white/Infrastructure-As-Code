@@ -1,11 +1,8 @@
 module "r53_zones" {
     source    = "terraform-aws-modules/route53/aws//modules/zones"
     zones     = {
-        "terraform-aws-modules-example.com" = {
-            comment = "bogartlab.com"
-            tags    = {
-                env = "production"
-            }
+        "bogartlab.com" = {
+            comment = "bogartlab.com DNS zone"
         }
     }
 }
