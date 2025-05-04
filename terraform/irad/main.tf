@@ -37,6 +37,8 @@ resource "random_string" "suffix" {
     special = false
 }
 
+data "aws_region" "current_region" {}
+data "aws_caller_identity" "current" {}
 data "aws_availability_zones" "available_zones" {
     filter {
         name   = "opt-in-status"
