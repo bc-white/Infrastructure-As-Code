@@ -6,7 +6,7 @@ data "aws_iam_policy_document" "route_53_ksk_policy" {
             identifiers = ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"]
         }
         actions   = [ "kms:*" ]
-        resources = [ aws_kms_key.client_kms_key.arn ]
+        resources = [ aws_kms_key.route_53_ksk_kms_key.arn ]
     }
     statement {
         sid = "Allow Route 53 DNSSEC Service"
@@ -19,7 +19,7 @@ data "aws_iam_policy_document" "route_53_ksk_policy" {
             "kms:GetPublicKey",
             "kms:Sign"
         ]
-        resources = [ aws_kms_key.client_kms_key.arn ]
+        resources = [ aws_kms_key.route_53_ksk_kms_key.arn ]
         condition {
             test     = "StringEquals"
             variable = "aws:SourceAccount"
@@ -38,7 +38,7 @@ data "aws_iam_policy_document" "route_53_ksk_policy" {
             identifiers = ["dnssec-route53.amazonaws.com"]
         }
         actions   = [ "kms:CreateGrant" ]
-        resources = [ aws_kms_key.client_kms_key.arn ]
+        resources = [ aws_kms_key.route_53_ksk_kms_key.arn ]
         condition {
             test     = "Bool"
             variable = "kms:GrantIsForAWSResource"
