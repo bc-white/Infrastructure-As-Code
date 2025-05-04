@@ -25,3 +25,8 @@ resource "aws_kms_key" "route_53_ksk_kms_key" {
         Account = "IRAD"
     }
 }
+
+resource "aws_kms_alias" "route_53_ksk_kms_key" {
+    name          = "alias/route-53-ksk"
+    target_key_id = aws_kms_key.route_53_ksk_kms_key.key_id
+}
