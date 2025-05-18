@@ -61,7 +61,6 @@ module "certificate_manager" {
     domain_name  = "bogartlab.com"
     zone_id      = module.r53_zones.route53_zone_zone_id["bogartlab.com"]
     validation_method = "DNS"
-    subject_alternative_names = [ "*.bogartlab.com" ]
     wait_for_validation = false
     tags = {
         Name = "bogartlab.com"
