@@ -59,20 +59,23 @@ module "r53_zones" {
 module "certificate_manager" {
     source  = "terraform-aws-modules/acm/aws"
     domain_name  = "bogartlab.com"
-    zone_id      = module.r53_zones.route53_zone_zone_id["bogartlab.com"]
-    validation_method = "DNS"
-    wait_for_validation = false
+    subject_alternative_names = [
+        "*.bogartlab.com"
+    ]
     tags = {
         Name = "bogartlab.com"
     }
+    validation_method = "DNS"
+    wait_for_validation = false
+    zone_id      = module.r53_zones.route53_zone_zone_id["bogartlab.com"]
 }
 
-# module "r53_records" {
-#     source    = "terraform-aws-modules/route53/aws//modules/records"
-#     zone_name = keys(module.r53_zones.route53_zone_zone_id)[0]
-#     depends_on = [module.zones]
-#     records = []
-# }
+module "r53_records" {
+    source    = "terraform-aws-modules/route53/aws//modules/records"
+    zone_name = keys(module.r53_zones.route53_zone_zone_id)[0]
+    depends_on = [module.zones]
+    records = []
+}
 
 resource "aws_kms_key" "route_53_ksk_kms_key" {
     customer_master_key_spec = "ECC_NIST_P256"
