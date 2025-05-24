@@ -1,9 +1,0 @@
-global:
-    ingress:
-        configureCertmanager: false  # disable GitLab's cert-manager if you're using ACM
-        class: alb
-        annotations:
-            kubernetes.io/ingress.class: alb
-            alb.ingress.kubernetes.io/scheme: internet-facing
-            alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}]'
-            alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-1:907803791788:certificate/5a28dd51-722b-4618-a103-7201be9d5f8e

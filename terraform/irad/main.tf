@@ -9,6 +9,14 @@ terraform {
             source  = "hashicorp/random"
             version = ">= 3.6"
         }
+        kubernetes = {
+            source  = "hashicorp/kubernetes"
+            version = ">= 2.35"
+        }
+        helm = {
+            source  = "hashicorp/helm"
+            version = ">= 2.15"
+        }
     }
     backend "s3" {
         encrypt = true
@@ -28,6 +36,26 @@ provider "aws" {
         Environment = "prod"
         "Terrafom" = "true"
         "Account" = "IRAD"
+        }
+    }
+}
+provider "kubernetes" {
+    host                   = module.eks.cluster_endpoint
+    cluster_ca_certificate = base64decode(module.eks.cluster_certificate_authority_data)
+    exec {
+        api_version = "client.authentication.k8s.io/v1beta1"
+        command     = "aws"
+        args        = ["eks", "get-token", "--cluster-name", module.eks.cluster_name, "--profile", provider.aws.profile]
+    }
+}
+provider "helm" {
+    kubernetes {
+        host                   = module.eks.cluster_endpoint
+        cluster_ca_certificate = base64decode(module.eks.cluster_certificate_authority_data)
+        exec {
+            api_version = "client.authentication.k8s.io/v1beta1"
+            command     = "aws"
+            args        = ["eks", "get-token", "--cluster-name", module.eks.cluster_name, "--profile", provider.aws.profile]
         }
     }
 }
@@ -136,4 +164,58 @@ module "irsa-ebs-csi" {
     provider_url                  = module.eks.oidc_provider
     role_policy_arns              = [data.aws_iam_policy.ebs_csi_policy.arn]
     oidc_fully_qualified_subjects = ["system:serviceaccount:kube-system:ebs-csi-controller-sa"]
+}
+
+# AWS Load Balancer Controller IAM Role
+module "aws_load_balancer_controller_irsa_role" {
+    source = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
+    version = "5.39.0"
+    role_name = "aws-load-balancer-controller-${module.eks.cluster_name}"
+    attach_load_balancer_controller_policy = true
+    oidc_providers = {
+        ex = {
+            provider_arn               = module.eks.oidc_provider_arn
+            namespace_service_accounts = ["kube-system:aws-load-balancer-controller"]
+        }
+    }
+    tags = {
+        Name = "aws-load-balancer-controller-irsa-role"
+    }
+}
+
+# Install AWS Load Balancer Controller using Helm
+resource "helm_release" "aws_load_balancer_controller" {
+    name       = "aws-load-balancer-controller"
+    repository = "https://aws.github.io/eks-charts"
+    chart      = "aws-load-balancer-controller"
+    namespace  = "kube-system"
+    version    = "1.11.0"
+    set {
+        name  = "clusterName"
+        value = module.eks.cluster_name
+    }
+    set {
+        name  = "serviceAccount.create"
+        value = "true"
+    }
+    set {
+        name  = "serviceAccount.name"
+        value = "aws-load-balancer-controller"
+    }
+    set {
+        name  = "serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
+        value = module.aws_load_balancer_controller_irsa_role.iam_role_arn
+    }
+    set {
+        name  = "region"
+        value = data.aws_region.current_region.name
+    }
+    set {
+        name  = "vpcId"
+        value = module.vpc.vpc_id
+    }
+    depends_on = [
+        module.eks,
+        module.aws_load_balancer_controller_irsa_role
+    ]
 }
