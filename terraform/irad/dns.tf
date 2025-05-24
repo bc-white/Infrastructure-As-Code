@@ -70,13 +70,6 @@ module "certificate_manager" {
     zone_id      = module.r53_zones.route53_zone_zone_id["bogartlab.com"]
 }
 
-# module "r53_records" {
-#     source    = "terraform-aws-modules/route53/aws//modules/records"
-#     zone_name = keys(module.r53_zones.route53_zone_zone_id)[0]
-#     depends_on = [module.zones]
-#     records = []
-# }
-
 resource "aws_kms_key" "route_53_ksk_kms_key" {
     customer_master_key_spec = "ECC_NIST_P256"
     description = "KMS key for Route 53 KSK"
