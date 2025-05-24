@@ -17,7 +17,7 @@ resource "aws_iam_policy" "aws_load_balancer_controller" {
                     }
                 }
             },
-            {
+            {                
                 Effect = "Allow"
                 Action = [
                     "ec2:DescribeAccountAttributes",
@@ -34,9 +34,11 @@ resource "aws_iam_policy" "aws_load_balancer_controller" {
                     "ec2:GetCoipPoolUsage",
                     "ec2:GetIpamPoolCidrs",
                     "ec2:DescribeCoipPools",
+                    "ec2:GetSecurityGroupsForVpc",
                     "elasticloadbalancing:DescribeLoadBalancers",
                     "elasticloadbalancing:DescribeLoadBalancerAttributes",
                     "elasticloadbalancing:DescribeListeners",
+                    "elasticloadbalancing:DescribeListenerAttributes",
                     "elasticloadbalancing:DescribeListenerCertificates",
                     "elasticloadbalancing:DescribeSSLPolicies",
                     "elasticloadbalancing:DescribeRules",
@@ -82,7 +84,6 @@ resource "aws_iam_policy" "aws_load_balancer_controller" {
             {
                 Effect = "Allow"
                 Action = [
-                    "ec2:GetSecurityGroupsForVpc",
                     "ec2:CreateSecurityGroup"
                 ]
                 Resource = "*"
