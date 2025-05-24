@@ -502,13 +502,21 @@ global:
             secret: ldap-secret
             key: password
           encryption: "simple_tls"
-          verify_certificates: true
+          verify_certificates: false  # Try with false first for AWS Managed AD
+          ca_file: ""
+          ssl_version: ""
+          timeout: 30  # Increase timeout to 30 seconds
+          connect_timeout: 10  # Connection timeout
+          bind_timeout: 10  # Bind timeout
           base: 'OU=Users,OU=bogartlab,DC=bogartlab,DC=com'
           user_filter: '(memberOf=CN=GitLab Users,OU=Groups,OU=bogartlab,DC=bogartlab,DC=com)'
           group_base: 'OU=Groups,OU=bogartlab,DC=bogartlab,DC=com'
           admin_group: 'CN=GitLab Admins,OU=Groups,OU=bogartlab,DC=bogartlab,DC=com'
           external_groups: []
           sync_ssh_keys: false
+          active_directory: true  # Enable AD-specific optimizations
+          allow_username_or_email_login: true
+          lowercase_usernames: false
       ## See documentation for complete example of a configured LDAP server
 
     duoAuth:
