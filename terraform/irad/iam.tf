@@ -82,6 +82,7 @@ resource "aws_iam_policy" "aws_load_balancer_controller" {
             {
                 Effect = "Allow"
                 Action = [
+                    "ec2:GetSecurityGroupsForVpc",
                     "ec2:CreateSecurityGroup"
                 ]
                 Resource = "*"
