@@ -45,7 +45,7 @@ provider "kubernetes" {
     exec {
         api_version = "client.authentication.k8s.io/v1beta1"
         command     = "aws"
-        args        = ["eks", "get-token", "--cluster-name", module.eks.cluster_name, "--profile", provider.aws.profile]
+        args        = ["eks", "get-token", "--cluster-name", module.eks.cluster_name, "--profile", "IRAD-Admin"]
     }
 }
 provider "helm" {
@@ -55,7 +55,7 @@ provider "helm" {
         exec {
             api_version = "client.authentication.k8s.io/v1beta1"
             command     = "aws"
-            args        = ["eks", "get-token", "--cluster-name", module.eks.cluster_name, "--profile", provider.aws.profile]
+            args        = ["eks", "get-token", "--cluster-name", module.eks.cluster_name, "--profile", "IRAD-Admin"]
         }
     }
 }
