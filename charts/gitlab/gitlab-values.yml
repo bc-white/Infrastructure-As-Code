@@ -494,7 +494,7 @@ global:
       servers:
         main:
           label: "AWS Directory Service"
-          host: 10.0.12.67
+          host: 10.0.25.145
           port: 636
           uid: sAMAccountName
           bind_dn: 'CN=GitLab Bind,OU=Users,OU=bogartlab,DC=bogartlab,DC=com'
@@ -505,9 +505,12 @@ global:
           verify_certificates: false  # Try with false first for AWS Managed AD
           ca_file: ""
           ssl_version: ""
-          timeout: 30  # Increase timeout to 30 seconds
-          connect_timeout: 10  # Connection timeout
-          bind_timeout: 10  # Bind timeout
+          timeout: 60  # Increased timeout for cross-account connectivity
+          connect_timeout: 30  # Increased connection timeout
+          bind_timeout: 30  # Increased bind timeout
+          # Add retry logic for connection issues
+          retry_empty_result_with_codes: [80, 81]
+          block_auto_created_users: false
           base: 'OU=Users,OU=bogartlab,DC=bogartlab,DC=com'
           user_filter: '(memberOf=CN=GitLab Users,OU=Groups,OU=bogartlab,DC=bogartlab,DC=com)'
           group_base: 'OU=Groups,OU=bogartlab,DC=bogartlab,DC=com'
