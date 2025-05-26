@@ -495,17 +495,14 @@ global:
         main:
           label: "AWS Directory Service"
           host: 10.0.25.145
-          port: 389  # Use port 389 for StartTLS
+          port: 636
           uid: sAMAccountName
           bind_dn: 'CN=GitLab Bind,OU=Users,OU=bogartlab,DC=bogartlab,DC=com'
           password:
             secret: ldap-secret
             key: password
-          encryption: "start_tls"
-          verify_certificates: false
-          tls_options:
-            verify_mode: 0
-            min_version: 1.2
+          encryption: "simple_tls"
+          verify_certificates: false  # Try with false first for AWS Managed AD
           ca_file: ""
           ssl_version: ""
           timeout: 60  # Increased timeout for cross-account connectivity
