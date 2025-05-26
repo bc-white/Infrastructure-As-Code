@@ -502,7 +502,7 @@ global:
             secret: ldap-secret
             key: password
           encryption: "simple_tls"
-          verify_certificates: false  # Try with false first for AWS Managed AD
+          verify_certificates: true 
           ca_file: ""
           ssl_version: ""
           timeout: 60  # Increased timeout for cross-account connectivity
