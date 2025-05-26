@@ -502,14 +502,10 @@ global:
             secret: ldap-secret
             key: password
           encryption: "simple_tls"
-          verify_certificates: true 
-          ca_file: ""
-          ssl_version: ""
+          verify_certificates: false
           timeout: 60  # Increased timeout for cross-account connectivity
           connect_timeout: 30  # Increased connection timeout
           bind_timeout: 30  # Increased bind timeout
-          # Add retry logic for connection issues
-          retry_empty_result_with_codes: [80, 81]
           block_auto_created_users: false
           base: 'OU=Users,OU=bogartlab,DC=bogartlab,DC=com'
           user_filter: '(memberOf=CN=GitLab Users,OU=Groups,OU=bogartlab,DC=bogartlab,DC=com)'
