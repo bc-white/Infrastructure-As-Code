@@ -494,7 +494,7 @@ global:
       servers:
         main:
           label: "AWS Directory Service"
-          host: 10.0.25.145
+          host: 10.0.12.67
           port: 636
           uid: sAMAccountName
           bind_dn: 'CN=GitLab Bind,OU=Users,OU=bogartlab,DC=bogartlab,DC=com'
