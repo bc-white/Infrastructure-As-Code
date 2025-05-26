@@ -34,7 +34,7 @@ provider "aws" {
     default_tags {
         tags = {
         Environment = "prod"
-        "Terrafom" = "true"
+        "Terraform" = "true"
         "Account" = "IRAD"
         }
     }
