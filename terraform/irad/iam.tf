@@ -6,31 +6,63 @@ resource "aws_iam_policy" "aws_load_balancer_controller" {
                 Sid    = "AllowSLRForELB",
                 Effect = "Allow",
                 Action = ["iam:CreateServiceLinkedRole"],
-                Resource = "*",
+                Resource = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/aws-service-role/elasticloadbalancing.amazonaws.com/*",
                 Condition = {
                     StringEquals = {
                         "iam:AWSServiceName" = "elasticloadbalancing.amazonaws.com"
                     }
                 }
-            },
+            },            
             {
-                Sid    = "DescribeAndGetResources",
+                Sid    = "DescribeEC2Resources",
                 Effect = "Allow",
                 Action = [
                     "ec2:Describe*",
                     "ec2:GetCoipPoolUsage",
                     "ec2:GetIpamPoolCidrs",
-                    "ec2:DescribeCoipPools",
-                    "ec2:GetSecurityGroupsForVpc",
+                    "ec2:GetSecurityGroupsForVpc"
+                ],
+                Resource = "*"
+            },
+            {
+                Sid    = "ManageEC2SecurityGroups",
+                Effect = "Allow",
+                Action = [
                     "ec2:AuthorizeSecurityGroupIngress",
                     "ec2:RevokeSecurityGroupIngress",
-                    "ec2:CreateSecurityGroup",
-                    "elasticloadbalancing:Describe*",
+                    "ec2:CreateSecurityGroup"
+                ],
+                Resource = [
+                    "arn:aws:ec2:${data.aws_region.current_region.name}:${data.aws_caller_identity.current.account_id}:security-group/*",
+                    "arn:aws:ec2:${data.aws_region.current_region.name}:${data.aws_caller_identity.current.account_id}:vpc/*"
+                ]
+            },
+            {
+                Sid    = "DescribeELBResources",
+                Effect = "Allow",
+                Action = ["elasticloadbalancing:Describe*"],
+                Resource = "arn:aws:elasticloadbalancing:${data.aws_region.current_region.name}:${data.aws_caller_identity.current.account_id}:*"
+            },
+            {
+                Sid    = "AccessCognitoAndCertificates",
+                Effect = "Allow",
+                Action = [
                     "cognito-idp:DescribeUserPoolClient",
                     "acm:ListCertificates",
                     "acm:DescribeCertificate",
                     "iam:ListServerCertificates",
-                    "iam:GetServerCertificate",
+                    "iam:GetServerCertificate"
+                ],
+                Resource = [
+                    "arn:aws:cognito-idp:${data.aws_region.current_region.name}:${data.aws_caller_identity.current.account_id}:*",
+                    "arn:aws:acm:${data.aws_region.current_region.name}:${data.aws_caller_identity.current.account_id}:*",
+                    "arn:aws:iam::${data.aws_caller_identity.current.account_id}:server-certificate/*"
+                ]
+            },
+            {
+                Sid    = "AccessWAFAndShield",
+                Effect = "Allow",
+                Action = [
                     "waf-regional:GetWebACL",
                     "waf-regional:GetWebACLForResource",
                     "waf-regional:AssociateWebACL",
@@ -45,7 +77,11 @@ resource "aws_iam_policy" "aws_load_balancer_controller" {
                     "shield:CreateProtection",
                     "shield:DeleteProtection"
                 ],
-                Resource = "*"
+                Resource = [
+                    "arn:aws:wafv2:${data.aws_region.current_region.name}:${data.aws_caller_identity.current.account_id}:*",
+                    "arn:aws:waf-regional:${data.aws_region.current_region.name}:${data.aws_caller_identity.current.account_id}:*",
+                    "arn:aws:shield::${data.aws_caller_identity.current.account_id}:*"
+                ]
             },
             {
                 Sid    = "TagNewSecurityGroupsWithClusterTag",
