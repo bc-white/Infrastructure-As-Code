@@ -87,7 +87,7 @@ resource "aws_iam_policy" "aws_load_balancer_controller" {
                 Sid    = "TagNewSecurityGroupsWithClusterTag",
                 Effect = "Allow",
                 Action = ["ec2:CreateTags"],
-                Resource = "arn:aws:ec2:*:*:security-group/*",
+                Resource = "arn:aws:ec2:${data.aws_region.current_region.name}:${data.aws_caller_identity.current.account_id}:security-group/*",
                 Condition = {
                     StringEquals = {
                         "ec2:CreateAction" = "CreateSecurityGroup"
@@ -104,7 +104,7 @@ resource "aws_iam_policy" "aws_load_balancer_controller" {
                     "ec2:CreateTags",
                     "ec2:DeleteTags"
                 ],
-                Resource = "arn:aws:ec2:*:*:security-group/*",
+                Resource = "arn:aws:ec2:${data.aws_region.current_region.name}:${data.aws_caller_identity.current.account_id}:security-group/*",
                 Condition = {
                     Null = {
                         "aws:RequestTag/elbv2.k8s.aws/cluster"  = "true",
@@ -154,9 +154,9 @@ resource "aws_iam_policy" "aws_load_balancer_controller" {
                     "elasticloadbalancing:RemoveTags"
                 ],
                 Resource = [
-                    "arn:aws:elasticloadbalancing:*:*:targetgroup/*/*",
-                    "arn:aws:elasticloadbalancing:*:*:loadbalancer/net/*/*",
-                    "arn:aws:elasticloadbalancing:*:*:loadbalancer/app/*/*"
+                    "arn:aws:elasticloadbalancing:${data.aws_region.current_region.name}:${data.aws_caller_identity.current.account_id}:targetgroup/*/*",
+                    "arn:aws:elasticloadbalancing:${data.aws_region.current_region.name}:${data.aws_caller_identity.current.account_id}:loadbalancer/net/*/*",
+                    "arn:aws:elasticloadbalancing:${data.aws_region.current_region.name}:${data.aws_caller_identity.current.account_id}:loadbalancer/app/*/*"
                 ],
                 Condition = {
                     Null = {
@@ -173,10 +173,10 @@ resource "aws_iam_policy" "aws_load_balancer_controller" {
                     "elasticloadbalancing:RemoveTags"
                 ],
                 Resource = [
-                    "arn:aws:elasticloadbalancing:*:*:listener/net/*/*/*",
-                    "arn:aws:elasticloadbalancing:*:*:listener/app/*/*/*",
-                    "arn:aws:elasticloadbalancing:*:*:listener-rule/net/*/*/*",
-                    "arn:aws:elasticloadbalancing:*:*:listener-rule/app/*/*/*"
+                    "arn:aws:elasticloadbalancing:${data.aws_region.current_region.name}:${data.aws_caller_identity.current.account_id}:listener/net/*/*/*",
+                    "arn:aws:elasticloadbalancing:${data.aws_region.current_region.name}:${data.aws_caller_identity.current.account_id}:listener/app/*/*/*",
+                    "arn:aws:elasticloadbalancing:${data.aws_region.current_region.name}:${data.aws_caller_identity.current.account_id}:listener-rule/net/*/*/*",
+                    "arn:aws:elasticloadbalancing:${data.aws_region.current_region.name}:${data.aws_caller_identity.current.account_id}:listener-rule/app/*/*/*"
                 ]
             },
             {
@@ -209,7 +209,7 @@ resource "aws_iam_policy" "aws_load_balancer_controller" {
                     "elasticloadbalancing:RegisterTargets",
                     "elasticloadbalancing:DeregisterTargets"
                 ],
-                Resource = "arn:aws:elasticloadbalancing:*:*:targetgroup/*/*"
+                Resource = "arn:aws:elasticloadbalancing:${data.aws_region.current_region.name}:${data.aws_caller_identity.current.account_id}:targetgroup/*/*"
             },
             {
                 Sid    = "ConfigureELBListenerRules",
