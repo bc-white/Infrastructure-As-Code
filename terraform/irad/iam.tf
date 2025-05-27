@@ -84,7 +84,9 @@ resource "aws_iam_policy" "aws_load_balancer_controller" {
                     "ec2:RevokeSecurityGroupIngress",
                     "ec2:DeleteSecurityGroup"
                 ],
-                Resource = "*",
+                Resource = [
+                    "arn:aws:ec2:${data.aws_region.current_region.name}:${data.aws_caller_identity.current.account_id}:security-group/*"
+                ],
                 Condition = {
                     Null = {
                         "aws:ResourceTag/elbv2.k8s.aws/cluster" = "false"
@@ -98,7 +100,10 @@ resource "aws_iam_policy" "aws_load_balancer_controller" {
                     "elasticloadbalancing:CreateLoadBalancer",
                     "elasticloadbalancing:CreateTargetGroup"
                 ],
-                Resource = "*",
+                Resource = [
+                    "arn:aws:elasticloadbalancing:${data.aws_region.current_region.name}:${data.aws_caller_identity.current.account_id}:loadbalancer/*/*",
+                    "arn:aws:elasticloadbalancing:${data.aws_region.current_region.name}:${data.aws_caller_identity.current.account_id}:targetgroup/*/*"
+                ],
                 Condition = {
                     Null = {
                         "aws:RequestTag/elbv2.k8s.aws/cluster" = "false"
@@ -151,7 +156,10 @@ resource "aws_iam_policy" "aws_load_balancer_controller" {
                     "elasticloadbalancing:ModifyTargetGroupAttributes",
                     "elasticloadbalancing:DeleteTargetGroup"
                 ],
-                Resource = "*",
+                Resource = [
+                    "arn:aws:elasticloadbalancing:${data.aws_region.current_region.name}:${data.aws_caller_identity.current.account_id}:loadbalancer/*/*/*",
+                    "arn:aws:elasticloadbalancing:${data.aws_region.current_region.name}:${data.aws_caller_identity.current.account_id}:targetgroup/*/*"
+                ],
                 Condition = {
                     Null = {
                         "aws:ResourceTag/elbv2.k8s.aws/cluster" = "false"
@@ -177,7 +185,11 @@ resource "aws_iam_policy" "aws_load_balancer_controller" {
                     "elasticloadbalancing:RemoveListenerCertificates",
                     "elasticloadbalancing:ModifyRule"
                 ],
-                Resource = "*"
+                Resource = [
+                    "arn:aws:elasticloadbalancing:${data.aws_region.current_region.name}:${data.aws_caller_identity.current.account_id}:listener/*/*/*",
+                    "arn:aws:elasticloadbalancing:${data.aws_region.current_region.name}:${data.aws_caller_identity.current.account_id}:listener-rule/*/*/*",
+                    "arn:aws:elasticloadbalancing:${data.aws_region.current_region.name}:${data.aws_caller_identity.current.account_id}:loadbalancer/*/*/*"
+                ]
             }
         ]
     })
