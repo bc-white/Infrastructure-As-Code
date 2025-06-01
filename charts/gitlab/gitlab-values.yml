@@ -494,10 +494,10 @@ global:
       servers:
         main:
           label: "AWS Directory Service"
-          host: 10.0.12.67
+          host: <IP or DNS of the AD server>
           port: 636
           uid: sAMAccountName
-          bind_dn: 'CN=GitLab Bind,OU=Users,OU=bogartlab,DC=bogartlab,DC=com'
+          bind_dn: '<AD BIND DN>'
           password:
             secret: ldap-secret
             key: password
@@ -507,10 +507,10 @@ global:
           connect_timeout: 30  # Increased connection timeout
           bind_timeout: 30  # Increased bind timeout
           block_auto_created_users: false
-          base: 'OU=Users,OU=bogartlab,DC=bogartlab,DC=com'
-          user_filter: '(memberOf=CN=GitLab Users,OU=Groups,OU=bogartlab,DC=bogartlab,DC=com)'
-          group_base: 'OU=Groups,OU=bogartlab,DC=bogartlab,DC=com'
-          admin_group: 'CN=GitLab Admins,OU=Groups,OU=bogartlab,DC=bogartlab,DC=com'
+          base: '<BASE DN>'
+          user_filter: '(memberOf=CN=<AD GROUP NAME>)'
+          group_base: 'OU=<GROUP BASE>'
+          admin_group: 'CN=<ADMIN GROUP NAME>'
           external_groups: []
           sync_ssh_keys: false
           active_directory: true  # Enable AD-specific optimizations
