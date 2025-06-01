@@ -50,24 +50,24 @@ data "aws_iam_policy_document" "route_53_ksk_policy" {
 module "r53_zones" {
     source    = "terraform-aws-modules/route53/aws//modules/zones"
     zones     = {
-        "bogartlab.com" = {
-            comment = "bogartlab.com DNS zone"
+        "<URL.COM>" = {
+            comment = "<URL> DNS zone"
         }
     }
 }
 
 module "certificate_manager" {
     source  = "terraform-aws-modules/acm/aws"
-    domain_name  = "bogartlab.com"
+    domain_name  = "<URL.COM>"
     subject_alternative_names = [
-        "*.bogartlab.com"
+        "*.<URL.COM>"
     ]
     tags = {
-        Name = "bogartlab.com"
+        Name = "<URL.COM>"
     }
     validation_method = "DNS"
     wait_for_validation = false
-    zone_id      = module.r53_zones.route53_zone_zone_id["bogartlab.com"]
+    zone_id      = module.r53_zones.route53_zone_zone_id["<URL.COM>"]
 }
 
 resource "aws_kms_key" "route_53_ksk_kms_key" {
