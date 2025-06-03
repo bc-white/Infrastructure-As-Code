@@ -36,3 +36,14 @@ my Mac.
   - alias python='python3'
   - alias pip='pip3'
 - Added "pinentry-program /opt/homebrew/bin/pinentry-mac" to ~/.gnupg/gpg-agent.conf
+
+## Git Configuration
+
+- git config --global user.name "Your Name"
+- git config --global user.email "Your Email"
+- git config --global signing.key "Your GPG Key ID"
+- git config --global commit.gpgsign true
+- git config --global tag.gpgsign true
+- git config --global gpg.program /opt/homebrew/bin/gpg
+- git config --global credential.helper /usr/local/share/gcm-core/git-credential-manager
+- git config --pull.rebase false
