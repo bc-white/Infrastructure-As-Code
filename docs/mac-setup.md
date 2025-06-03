@@ -31,5 +31,8 @@ my Mac.
 
 ## Environment Variables
 
-- Added "alias ll='ls -lh'" to ~/.zshrc
+- Added aliases to ~/.zshrc
+  - alias ll='ls -lh'
+  - alias python='python3'
+  - alias pip='pip3'
 - Added "pinentry-program /opt/homebrew/bin/pinentry-mac" to ~/.gnupg/gpg-agent.conf
