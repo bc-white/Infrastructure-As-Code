@@ -31,5 +31,5 @@ my Mac.
 
 ## Environment Variables
 
-- Added "ll" to ~/.zshrc
+- Added "alias ll='ls -lh'" to ~/.zshrc
 - Added "pinentry-program /opt/homebrew/bin/pinentry-mac" to ~/.gnupg/gpg-agent.conf
