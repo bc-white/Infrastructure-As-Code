@@ -47,3 +47,9 @@ my Mac.
 - git config --global gpg.program /opt/homebrew/bin/gpg
 - git config --global credential.helper /usr/local/share/gcm-core/git-credential-manager
 - git config --pull.rebase false
+
+## Languages Added
+
+- Go
+- Python
+- Rust
