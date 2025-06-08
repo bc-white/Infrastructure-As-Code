@@ -19,7 +19,7 @@ my Mac.
 - git-credential-manager
 - gnupg
 - pinentry-mac
-- terraform
+- hashicorp/tap/terraform (after brew tap hashiciorp/tap)
 - terraform-docs
 - python
 - uv
