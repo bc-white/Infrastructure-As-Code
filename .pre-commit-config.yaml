@@ -6,8 +6,28 @@ repos:
     -   id: end-of-file-fixer
     -   id: check-yaml
     -   id: check-added-large-files
-# - repo: https://github.com/terraform-docs/terraform-docs
-#   rev: "v0.20.0"
+# - repo: https://github.com/astral-sh/ruff-pre-commit
+#   # Ruff version.
+#   rev: v0.11.13
 #   hooks:
-#     - id: terraform-docs-go
-#       args: ["ARGS", "TO PASS", "INCLUDING PATH"]  # e.g. ["--output-file", "README.md", "./mymodule/path"]
+#     # Run the linter.
+#     - id: ruff-check
+#       types_or: [ python, pyi ]
+#       args: [ --fix ]
+#     # Run the formatter.
+#     - id: ruff-format
+#       types_or: [ python, pyi ]
+# - repo: https://github.com/pycqa/isort
+#   rev: 5.6.4
+#   hooks:
+#     - id: isort
+#       args: ["--profile", "black", "--filter-files"]
+# - repo: https://github.com/psf/black-pre-commit-mirror
+#   rev: 25.1.0
+#   hooks:
+#     - id: black
+#       # It is recommended to specify the latest version of Python
+#       # supported by your project here, or alternatively use
+#       # pre-commit's default_language_version, see
+#       # https://pre-commit.com/#top_level-default_language_version
+#       language_version: python3.13.3

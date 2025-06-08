@@ -77,7 +77,7 @@ def ingest_skills(skills_file: str, stop_words: Set[str]) -> List[str]:
         stop_words (Set[str]): List of stopwords to remove
     Returns:
         List[str]: List of skills
-    
+
     Raises:
         FileNotFoundError: If the skills file is not found
     """
@@ -182,7 +182,7 @@ def normalize_skill(skill: str, lemmatizer: WordNetLemmatizer) -> str:
     return ' '.join(lemmatized_tokens)
 
 def coalesce_brands(skill: str) -> str:
-    """Coalesces well known brands for a skill. For example, 'Microsoft Windows' becomes 'Windows' 
+    """Coalesces well known brands for a skill. For example, 'Microsoft Windows' becomes 'Windows'
     Args:
         skill (String): Skill to coalesce brands for
     Returns:

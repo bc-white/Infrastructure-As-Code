@@ -12,7 +12,7 @@ resource "aws_iam_policy" "aws_load_balancer_controller" {
                         "iam:AWSServiceName" = "elasticloadbalancing.amazonaws.com"
                     }
                 }
-            },            
+            },
             {
                 Sid    = "DescribeEC2Resources",
                 Effect = "Allow",
