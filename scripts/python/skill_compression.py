@@ -17,12 +17,13 @@ import string
 import sys
 from typing import List, Set
 from venv import logger
-from fuzzywuzzy import process, fuzz
+
+from fuzzywuzzy import fuzz, process
 from nltk import download as nltk_download
 from nltk.corpus import stopwords, wordnet
 from nltk.stem import WordNetLemmatizer
-from nltk.tokenize import word_tokenize
 from nltk.tag import pos_tag
+from nltk.tokenize import word_tokenize
 
 # Brand Constants
 MICROSOFT_WINDOWS_SERVER = "Windows Server"

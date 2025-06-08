@@ -10,9 +10,11 @@ Ensure you have installed the NLTK and fuzzywuzzy library as well as pytest:
 import logging
 import sys
 from typing import List
+
 import pytest
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
+
 from scripts.python import skill_compression
 
 # Set up logging
