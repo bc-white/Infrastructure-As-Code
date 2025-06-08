@@ -24,6 +24,7 @@ my Mac.
 - python
 - uv
 - uvtools
+- watch
 
 ### UV Installed Items
 
