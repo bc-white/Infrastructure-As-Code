@@ -8,11 +8,24 @@ This repository contains infrastructure as code items from my time as an enginee
 
 [![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/bc-white/Infrastructure-As-Code)
 
-## Suggested Prerequisites
+## GitPod Prerequisites
 
 This repository assumes you will be launching the code from GitPod and also that you have a [Personal Configuration Repository](https://github.com/bc-white/Configurations) that accounts for standing up various tools like Terraform, AWS CLI, GCP CLI, and others. If you do not have this setup, you can initialize a fairly basic version of this repository from the [Gitpod Dotfiles Template Repository](https://github.com/gitpod-samples/demo-dotfiles-with-gitpod).
 
 This repository launches a lightly customized Docker container that installs the latest Java to enable SonarQube to run scans.
+
+## Getting Started
+
+To get started with this repository, you can follow these steps:
+
+1. Clone the repository to your local machine.
+2. Run the pre-commit hooks to ensure code quality and formatting.
+
+   ```bash
+   #!/bin/bash
+   pre-commit install
+   pre-commit run --all-files
+   ```
 
 ## Repository Contents
 

@@ -19,11 +19,12 @@ my Mac.
 - git-credential-manager
 - gnupg
 - pinentry-mac
-- terraform
+- hashicorp/tap/terraform (after brew tap hashiciorp/tap)
 - terraform-docs
 - python
 - uv
 - uvtools
+- watch
 
 ### UV Installed Items
 
@@ -47,3 +48,9 @@ my Mac.
 - git config --global gpg.program /opt/homebrew/bin/gpg
 - git config --global credential.helper /usr/local/share/gcm-core/git-credential-manager
 - git config --pull.rebase false
+
+## Languages Added
+
+- Go
+- Python
+- Rust
