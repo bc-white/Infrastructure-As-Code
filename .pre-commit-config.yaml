@@ -31,3 +31,8 @@ repos:
       # pre-commit's default_language_version, see
       # https://pre-commit.com/#top_level-default_language_version
       language_version: python3.13.3
+- repo: https://github.com/terraform-docs/terraform-docs
+  rev: v0.20.0
+  hooks:
+    - id: terraform-docs-go
+      args: ["--output-file", "README.md", "--recursive", "./terraform"]
