@@ -41,7 +41,6 @@ echo 'export NODE_EXTRA_CA_CERTS=~/system-certs.pem' >> ~/.zshrc
 source ~/.zshrc
 ```
 
-
 ## Environment Variables
 
 - Added aliases to ~/.zshrc
