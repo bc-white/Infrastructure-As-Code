@@ -36,8 +36,8 @@ my Mac.
 Needed to tell NPM about system certs:
 
 ```bash
-security find-certificate -a -p /Library/Keychains/System.keychain > ~/system-certs.pem
-echo 'export NODE_EXTRA_CA_CERTS=~/system-certs.pem' >> ~/.zshrc
+security find-certificate -a -p /System/Library/Keychains/SystemRootCertificates.keychain > ~/macos-root-certs.pem
+echo 'export NODE_EXTRA_CA_CERTS=~/macos-root-certs.pem' >> ~/.zshrc
 source ~/.zshrc
 ```
 
