@@ -29,7 +29,18 @@ my Mac.
 
 ### UV Installed Items
 
-- ruff
+- ruff (maybe just pip install this?)
+
+## NPM Packages
+
+Needed to tell NPM about system certs:
+
+```bash
+security find-certificate -a -p /Library/Keychains/System.keychain > ~/system-certs.pem
+echo 'export NODE_EXTRA_CA_CERTS=~/system-certs.pem' >> ~/.zshrc
+source ~/.zshrc
+```
+
 
 ## Environment Variables
 
