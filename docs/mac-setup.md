@@ -22,6 +22,7 @@ my Mac.
 - hashicorp/tap/terraform (after brew tap hashiciorp/tap)
 - terraform-docs
 - python
+- node
 - uv
 - uvtools
 - watch
