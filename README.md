@@ -19,6 +19,19 @@ To get started with this repository, you can follow these steps:
    pre-commit run --all-files
    ```
 
+## Getting Started
+
+To get started with this repository, you can follow these steps:
+
+1. Clone the repository to your local machine.
+2. Run the pre-commit hooks to ensure code quality and formatting.
+
+   ```bash
+   #!/bin/bash
+   pre-commit install
+   pre-commit run --all-files
+   ```
+
 ## Repository Contents
 
 This repository contains the following items:
