@@ -22,13 +22,24 @@ my Mac.
 - hashicorp/tap/terraform (after brew tap hashiciorp/tap)
 - terraform-docs
 - python
+- node
 - uv
 - uvtools
 - watch
 
 ### UV Installed Items
 
-- ruff
+- ruff (maybe just pip install this?)
+
+## NPM Packages
+
+Needed to tell NPM about system certs:
+
+```bash
+security find-certificate -a -p /System/Library/Keychains/SystemRootCertificates.keychain > ~/macos-root-certs.pem
+echo 'export NODE_EXTRA_CA_CERTS=~/macos-root-certs.pem' >> ~/.zshrc
+source ~/.zshrc
+```
 
 ## Environment Variables
 
