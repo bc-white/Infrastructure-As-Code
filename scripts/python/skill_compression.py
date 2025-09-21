@@ -16,7 +16,6 @@ import re
 import string
 import sys
 from typing import List, Set
-from venv import logger
 
 from fuzzywuzzy import fuzz, process
 from nltk import download as nltk_download
@@ -236,7 +235,7 @@ def main(args: argparse.Namespace) -> None:
         logging.error(exc)
         sys.exit(1)
     lemmatizer = WordNetLemmatizer()
-    logger.info("Normalizing skills...")
+    logging.info("Normalizing skills...")
     normalized_skills = [normalize_skill(skill, lemmatizer) for skill in skills]
     condensed_skills_list, removed_skills_list = condense_skills(normalized_skills, 80)
     normalize_skill_file = (
