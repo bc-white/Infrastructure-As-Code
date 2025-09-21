@@ -141,7 +141,7 @@ def deduplicate_skills(skills: List[str]) -> List[str]:
         List[str]: List of unique skills
     """
     logging.info("Deduplicating skills...")
-    return list({k: None for k in skills}.keys())
+    return list(dict.fromkeys(skills).keys())
 
 
 def condense_skills(skill_list: List[str], threshold: int = 80) -> tuple:
