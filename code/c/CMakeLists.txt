@@ -25,25 +25,13 @@ if(ENABLE_COVERAGE)
     endif()
 endif()
 
-# Create library for shared code (so tests can link to it)
-add_library(learning_lib STATIC src/learning/learning_lib.c)
-target_include_directories(learning_lib PUBLIC src/learning)
-
 # Main executable
 add_executable(learning src/learning/learning.c)
-target_link_libraries(learning learning_lib)
 set_target_properties(learning PROPERTIES OUTPUT_NAME "learning.exe")
-set_target_properties(learning PROPERTIES OUTPUT_NAME "learning.exe")
+
+# Simple testing - just run the executable
 enable_testing()
-add_executable(test_learning src/learning/tests/test_learning.c)
-target_link_libraries(test_learning learning_lib)
-
-# Register test with CTest
-add_test(NAME LearningTests COMMAND test_learning)
-
-# Add a test that runs the main executable to get coverage on main()
-add_test(NAME MainExecutableTest COMMAND learning.exe)
-add_test(NAME MainExecutableWithArgsTest COMMAND learning.exe TestUser)
+add_test(NAME HelloWorldTest COMMAND learning.exe)
 
 # Coverage targets (only available when coverage is enabled)
 if(ENABLE_COVERAGE)
@@ -58,22 +46,16 @@ if(ENABLE_COVERAGE)
         add_custom_target(coverage
             COMMENT "Generating code coverage report"
             COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/coverage
-
             # Reset coverage counters
             COMMAND ${LCOV_PATH} --directory . --zerocounters
-
             # Run tests
             COMMAND ${CMAKE_CTEST_COMMAND} --verbose
-
             # Capture coverage data
             COMMAND ${LCOV_PATH} --directory . --capture --output-file coverage.info
-
             # Remove unwanted files (system headers, test files)
             COMMAND ${LCOV_PATH} --remove coverage.info '*/tests/*' --output-file coverage.info --ignore-errors unused
-
             # Generate HTML report
             COMMAND ${GENHTML_PATH} coverage.info --output-directory coverage
-
             WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
         )
 

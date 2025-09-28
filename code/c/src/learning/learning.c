@@ -1,3 +1,6 @@
-#include "learning.h"
+#include <stdio.h>
 
-int main(int argc, char **argv) { return run_learning_app(argc, argv); }
+int main() {
+  printf("Hello, from learning!\n");
+  return 0;
+}
