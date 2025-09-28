@@ -1,6 +1,6 @@
 {
-    "sonarlint.connectedMode.project": {
-        "connectionId": "Dell-Laptop-VSCode",
-        "projectKey": "bc-white_Infrastructure-As-Code"
-    }
+  "sonarlint.connectedMode.project": {
+    "connectionId": "Dell-Laptop-VSCode",
+    "projectKey": "bc-white_Infrastructure-As-Code"
+  }
 }

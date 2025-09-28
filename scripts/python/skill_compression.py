@@ -3,8 +3,8 @@ This script accepts a list of skills as input and emits a list
 of condensed root skills (e.g., 'java' instead of 'java programming').
 
 Ensure you have installed the NLTK library and the fuzzywuzzy library:
-    pip install nltk
-    pip install fuzzywuzzy
+  pip install nltk
+  pip install fuzzywuzzy
 
 Usage: python skill_condenser.py < src_skills.txt > < dest_skills.txt >
 """
@@ -49,7 +49,7 @@ nltk_download("averaged_perceptron_tagger_eng", quiet=True)
 def process_args() -> argparse.Namespace:
     """Process command-line arguments
     Returns:
-        argparse.Namespace: Arguments
+      argparse.Namespace: Arguments
     """
     parser = argparse.ArgumentParser(
         prog="skill_compression",
@@ -69,9 +69,9 @@ def process_args() -> argparse.Namespace:
 def sanitize_args(args: argparse.Namespace) -> argparse.Namespace:
     """Sanitize command-line arguments
     Args:
-        args (argparse.Namespace): Command-line arguments
+      args (argparse.Namespace): Command-line arguments
     Returns:
-        argparse.Namespace: Sanitized arguments
+      argparse.Namespace: Sanitized arguments
     """
     logging.info("Sanitizing arguments...")
     args.src_skill_file = os.path.realpath(args.src_skill_file)
@@ -82,13 +82,13 @@ def sanitize_args(args: argparse.Namespace) -> argparse.Namespace:
 def ingest_skills(skills_file: str, stop_words: Set[str]) -> List[str]:
     """Ingest skills from a file, splitting sentences on commas and semicolons
     Args:
-        skills_file (str): Path to the skills file
-        stop_words (Set[str]): List of stopwords to remove
+      skills_file (str): Path to the skills file
+      stop_words (Set[str]): List of stopwords to remove
     Returns:
-        List[str]: List of skills
+      List[str]: List of skills
 
     Raises:
-        FileNotFoundError: If the skills file is not found
+      FileNotFoundError: If the skills file is not found
     """
     logging.info("Ingesting skills from %s...", skills_file)
     skills = []
@@ -107,8 +107,8 @@ def ingest_skills(skills_file: str, stop_words: Set[str]) -> List[str]:
 def output_skills(skills: List[str], dest_skills_file: str) -> None:
     """Output skills to a file
     Args:
-        skills (List[str]): List of skills
-        dest_skills_file (str): Path to the destination skills file
+      skills (List[str]): List of skills
+      dest_skills_file (str): Path to the destination skills file
     """
     logging.info("Outputting skills to %s...", dest_skills_file)
     try:
@@ -123,10 +123,10 @@ def output_skills(skills: List[str], dest_skills_file: str) -> None:
 def remove_stopwords(skill: str, stop_words: set) -> str:
     """Remove stopwords from a skill
     Args:
-        skill (str): Skill to remove stopwords from
-        stop_words (set): Set of stopwords
+      skill (str): Skill to remove stopwords from
+      stop_words (set): Set of stopwords
     Returns:
-        str: Skill with stopwords removed
+      str: Skill with stopwords removed
     """
     skill_tokens = word_tokenize(skill)
     filtered_skill = [word for word in skill_tokens if word.lower() not in stop_words]
@@ -136,9 +136,9 @@ def remove_stopwords(skill: str, stop_words: set) -> str:
 def deduplicate_skills(skills: List[str]) -> List[str]:
     """Deduplicate skills
     Args:
-        skills (List[str]): List of skills
+      skills (List[str]): List of skills
     Returns:
-        List[str]: List of unique skills
+      List[str]: List of unique skills
     """
     logging.info("Deduplicating skills...")
     return list(dict.fromkeys(skills).keys())
@@ -147,10 +147,10 @@ def deduplicate_skills(skills: List[str]) -> List[str]:
 def condense_skills(skill_list: List[str], threshold: int = 80) -> tuple:
     """Condense a skill through deduplication using fuzzy matching
     Args:
-        skill_list (List[str]): List of skills
-        threshold (int): Fuzzy matching threshold
+      skill_list (List[str]): List of skills
+      threshold (int): Fuzzy matching threshold
     Returns:
-        List[str]: List of condensed skills
+      List[str]: List of condensed skills
     """
     logging.info("Condensing skills...")
     condensed_skills = []
@@ -171,9 +171,9 @@ def condense_skills(skill_list: List[str], threshold: int = 80) -> tuple:
 def get_wordnet_pos(word) -> str:
     """Map POS tag to first character of WordNet POS tag
     Args:
-        word (str): Word to get POS tag for
+      word (str): Word to get POS tag for
     Returns:
-        str: First character of WordNet POS tag
+      str: First character of WordNet POS tag
     """
     tag = pos_tag([word])[0][1][0].upper()
     tag_dict = {
@@ -188,9 +188,9 @@ def get_wordnet_pos(word) -> str:
 def normalize_skill(skill: str, lemmatizer: WordNetLemmatizer) -> str:
     """Normalize a skill by stemming and removing stopwords
     Args:
-        skill (str): Skill to normalize
+      skill (str): Skill to normalize
     Returns:
-        str: Normalized skill
+      str: Normalized skill
     """
     tokens = skill.lower().split()
     lemmatized_tokens = [
@@ -202,9 +202,9 @@ def normalize_skill(skill: str, lemmatizer: WordNetLemmatizer) -> str:
 def coalesce_brands(skill: str) -> str:
     """Coalesces well known brands for a skill. For example, 'Microsoft Windows' becomes 'Windows'
     Args:
-        skill (String): Skill to coalesce brands for
+      skill (String): Skill to coalesce brands for
     Returns:
-        String: Skill with brands coalesced
+      String: Skill with brands coalesced
     """
     # Microsoft
     microsoft_server_list = [
@@ -225,7 +225,7 @@ def coalesce_brands(skill: str) -> str:
 def main(args: argparse.Namespace) -> None:
     """Main function
     Args:
-        args (argparse.Namespace): Command-line arguments
+      args (argparse.Namespace): Command-line arguments
     """
     args = sanitize_args(args)
     stop_words = set(stopwords.words("english"))

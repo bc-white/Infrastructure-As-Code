@@ -5,9 +5,9 @@
 # Author:      Christopher White
 ###############################################################################
 param (
-    [Parameter(Mandatory=$true)]
-    [ValidateNotNullOrEmpty()]
-    [string]$BackupLocation
+  [Parameter(Mandatory=$true)]
+  [ValidateNotNullOrEmpty()]
+  [string]$BackupLocation
 )
 
 $Timestamp = Get-Date -Format "yyyyMMdd_HHmmss"
