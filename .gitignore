@@ -68,6 +68,9 @@ Makefile
 *.exe
 *.out
 
+# Allow compile_commands.json in .vscode directory for VS Code and SonarQube
+!.vscode/compile_commands.json
+
 # Mongo Explorer plugin
 .idea/**/mongoSettings.xml
 
