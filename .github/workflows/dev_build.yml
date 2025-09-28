@@ -4,6 +4,9 @@ on:
     types: [opened, synchronize, reopened]
     branches:
       - development
+  push:
+    branches:
+      - development
 jobs:
   RunTests:
     name: Run Tests
