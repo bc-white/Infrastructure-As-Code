@@ -1,52 +1,52 @@
 name: Dev Build
 on:
-    pull_request:
-        types: [opened, synchronize, reopened]
-        branches:
-            - development
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches:
+      - development
 jobs:
-    RunTests:
-        name: Run Tests
-        runs-on: ubuntu-latest
-        steps:
-          - uses: actions/checkout@v4
-          - name: Set up Python
-            uses: actions/setup-python@v5
-            with:
-              python-version: '3.12.x'
-          - name: Display Python version
-            run: python -c "import sys; print(sys.version)"
-          - name: Install dependencies
-            run: |
-              python -m pip install --upgrade pip
-              pip install -r scripts/python/requirements.txt
-          - name: Run Tests
-            run: |
-              export PYTHONPATH=$PYTHONPATH:$(pwd)
-              pytest --cov-report xml:python_coverage_report.xml --cov=. scripts/python/tests/test_skill_compression.py
-          - name: Emit coverage report
-            uses: actions/upload-artifact@v4
-            with:
-              name: coverage-report
-              path: ./python_coverage_report.xml
-              retention-days: 1
-    SonarCloud:
-        needs: RunTests
-        name: SonarCloud
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v4
-              with:
-                fetch-depth: 0 # Shallow clones should be diabled for a better relevancy for analysis
-            - name: Load Coverage Report
-              uses: actions/download-artifact@master
-              with:
-                name: coverage-report
-                path: ./coverage_report
-            - name: Check
-              run: cat ./coverage_report/python_coverage_report.xml
-            - name: SonarCloudScan
-              uses: SonarSource/sonarqube-scan-action@master
-              env:
-                GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-                SONAR_TOKEN: ${{secrets.SONAR_TOKEN}}
+  RunTests:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.x'
+      - name: Display Python version
+        run: python -c "import sys; print(sys.version)"
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r scripts/python/requirements.txt
+      - name: Run Tests
+        run: |
+          export PYTHONPATH=$PYTHONPATH:$(pwd)
+          pytest --cov-report xml:python_coverage_report.xml --cov=. scripts/python/tests/test_skill_compression.py
+      - name: Emit coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: ./python_coverage_report.xml
+          retention-days: 1
+  SonarCloud:
+    needs: RunTests
+    name: SonarCloud
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Shallow clones should be diabled for a better relevancy for analysis
+      - name: Load Coverage Report
+        uses: actions/download-artifact@master
+        with:
+          name: coverage-report
+          path: ./coverage_report
+      - name: Check
+        run: cat ./coverage_report/python_coverage_report.xml
+      - name: SonarCloudScan
+        uses: SonarSource/sonarqube-scan-action@master
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          SONAR_TOKEN: ${{secrets.SONAR_TOKEN}}
