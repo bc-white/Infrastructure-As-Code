@@ -183,3 +183,12 @@ __pycache__/
 
 # Ignore Ruff cache files
 .ruff_cache/
+
+# Ignore coverage reports
+htmlcov/
+.coverage
+.coverage.*
+.nox/
+.pytest_cache/
+nosetests.xml
+coverage.xml
