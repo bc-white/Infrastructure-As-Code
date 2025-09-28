@@ -39,12 +39,21 @@ jobs:
         with:
           fetch-depth: 0 # Shallow clones should be diabled for a better relevancy for analysis
       - name: Load Coverage Report
-        uses: actions/download-artifact@master
+        uses: actions/download-artifact@v4
         with:
           name: coverage-report
           path: ./coverage_report
-      - name: Check
-        run: cat ./coverage_report/python_coverage_report.xml
+      - name: Check Coverage Report
+        run: |
+          echo "Checking if coverage report exists..."
+          ls -la ./coverage_report/
+          if [ -f "./coverage_report/python_coverage_report.xml" ]; then
+            echo "Coverage report found. Contents:"
+            cat ./coverage_report/python_coverage_report.xml
+          else
+            echo "Coverage report not found!"
+            exit 1
+          fi
       - name: SonarCloudScan
         uses: SonarSource/sonarqube-scan-action@master
         env:
