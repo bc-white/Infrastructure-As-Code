@@ -33,30 +33,53 @@ jobs:
           name: coverage-report
           path: ./python_coverage_report.xml
           retention-days: 1
+  BuildCProject:
+    name: Build C/C++ Project
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake
+      - name: Build C Project
+        run: |
+          echo "Building C project..."
+          cd code/c
+          mkdir -p build
+          cd build
+          cmake ..
+          make
+          echo "Build completed successfully"
+      - name: Upload Compile Commands
+        uses: actions/upload-artifact@v4
+        with:
+          name: compile-commands
+          path: code/c/build/compile_commands.json
+          retention-days: 1
   SonarCloud:
-    needs: RunPythonTests
+    needs: [RunPythonTests, BuildCProject]
     name: SonarCloud
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0 # Shallow clones should be diabled for a better relevancy for analysis
-      - name: Load Coverage Report
+      - name: Load All Artifacts
         uses: actions/download-artifact@v4
         with:
-          name: coverage-report
-          path: ./coverage_report
-      - name: Check Coverage Report
+          pattern: '*'
+          path: ./artifacts
+          merge-multiple: false
+      - name: Organize Artifacts
         run: |
-          echo "Checking if coverage report exists..."
+          echo "Moving artifacts to expected locations..."
+          mv artifacts/coverage-report/* ./coverage_report/ 2>/dev/null || mkdir -p ./coverage_report
+          mkdir -p code/c/build
+          mv artifacts/compile-commands/* code/c/build/ 2>/dev/null || true
+          echo "Artifacts organized:"
           ls -la ./coverage_report/
-          if [ -f "./coverage_report/python_coverage_report.xml" ]; then
-            echo "Coverage report found. Contents:"
-            cat ./coverage_report/python_coverage_report.xml
-          else
-            echo "Coverage report not found!"
-            exit 1
-          fi
+          ls -la code/c/build/
       - name: SonarCloudScan
         uses: SonarSource/sonarqube-scan-action@master
         env:

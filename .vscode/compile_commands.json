@@ -1,8 +1,0 @@
-[
-  {
-    "directory": "/Users/chriswhite/Desktop/code/Infrastructure-As-Code/code/c/build",
-    "command": "/usr/bin/cc   -std=gnu17 -arch arm64 -o CMakeFiles/learning.dir/src/learning/learning.c.o -c /Users/chriswhite/Desktop/code/Infrastructure-As-Code/code/c/src/learning/learning.c",
-    "file": "/Users/chriswhite/Desktop/code/Infrastructure-As-Code/code/c/src/learning/learning.c",
-    "output": "CMakeFiles/learning.dir/src/learning/learning.c.o"
-  }
-]

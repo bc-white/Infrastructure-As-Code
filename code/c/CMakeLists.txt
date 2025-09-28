@@ -11,11 +11,3 @@ set(CMAKE_C_STANDARD_REQUIRED ON)
 project(learning VERSION 0.1.0 LANGUAGES C CXX)
 add_executable(learning src/learning/learning.c)
 set_target_properties(learning PROPERTIES OUTPUT_NAME "learning.exe")
-
-# Copy compile commands to .vscode for VS Code and SonarQube
-add_custom_command(TARGET learning POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy
-        ${CMAKE_BINARY_DIR}/compile_commands.json
-        ${CMAKE_SOURCE_DIR}/../../.vscode/compile_commands.json
-    COMMENT "Copying compile_commands.json to .vscode directory"
-)
