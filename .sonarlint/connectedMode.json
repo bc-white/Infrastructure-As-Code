@@ -1,4 +1,4 @@
 {
-    "sonarCloudOrganization": "bc-white",
-    "projectKey": "bc-white_Infrastructure-As-Code"
+  "sonarCloudOrganization": "bc-white",
+  "projectKey": "bc-white_Infrastructure-As-Code"
 }

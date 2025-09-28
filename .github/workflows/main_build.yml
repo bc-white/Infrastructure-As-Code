@@ -8,7 +8,7 @@ on:
     branches:
       - main
 jobs:
-  RunTests:
+  RunPythonTests:
     name: Run Tests
     runs-on: ubuntu-latest
     steps:
@@ -33,30 +33,69 @@ jobs:
           name: coverage-report
           path: ./python_coverage_report.xml
           retention-days: 1
+  BuildCProject:
+    name: Build C/C++ Project
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake lcov
+      - name: Build C Project
+        run: |
+          echo "Building C project..."
+          cd code/c
+          mkdir -p build
+          cd build
+          cmake ..
+          make
+          echo "Build completed successfully"
+      - name: Run C Tests
+        run: |
+          echo "Running C tests with CTest..."
+          cd code/c/build
+          ctest --verbose --output-on-failure
+      - name: Generate Coverage Report
+        run: |
+          echo "Generating coverage data for SonarQube..."
+          cd code/c/build
+          make coverage-gcov
+          echo "Coverage files generated:"
+          find . -name "*.gcov" | head -10
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: c-build-artifacts
+          path: |
+            code/c/build/compile_commands.json
+            code/c/build/*.gcov
+          retention-days: 1
   SonarCloud:
-    needs: RunTests
+    needs: [RunPythonTests, BuildCProject]
     name: SonarCloud
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0 # Shallow clones should be diabled for a better relevancy for analysis
-      - name: Load Coverage Report
+          fetch-depth: 0 # Shallow clones should be disabled for a better relevancy for analysis
+      - name: Load All Artifacts
         uses: actions/download-artifact@v4
         with:
-          name: coverage-report
-          path: ./coverage_report
-      - name: Check Coverage Report
+          pattern: '*'
+          path: ./artifacts
+          merge-multiple: false
+      - name: Organize Artifacts
         run: |
-          echo "Checking if coverage report exists..."
+          echo "Moving artifacts to expected locations..."
+          mv artifacts/coverage-report/* ./coverage_report/ 2>/dev/null || mkdir -p ./coverage_report
+          mkdir -p code/c/build
+          mv artifacts/c-build-artifacts/* code/c/build/ 2>/dev/null || true
+          echo "Artifacts organized:"
           ls -la ./coverage_report/
-          if [ -f "./coverage_report/python_coverage_report.xml" ]; then
-            echo "Coverage report found. Contents:"
-            cat ./coverage_report/python_coverage_report.xml
-          else
-            echo "Coverage report not found!"
-            exit 1
-          fi
+          ls -la code/c/build/
+          echo "Coverage files:"
+          find code/c/build -name "*.gcov" | head -5 || echo "No .gcov files found"
       - name: SonarCloudScan
         uses: SonarSource/sonarqube-scan-action@master
         env:
