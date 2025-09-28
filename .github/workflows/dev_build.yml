@@ -41,7 +41,7 @@ jobs:
       - name: Install build dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y build-essential cmake
+          sudo apt-get install -y build-essential cmake lcov
       - name: Build C Project
         run: |
           echo "Building C project..."
@@ -56,11 +56,20 @@ jobs:
           echo "Running C tests with CTest..."
           cd code/c/build
           ctest --verbose --output-on-failure
-      - name: Upload Compile Commands
+      - name: Generate Coverage Report
+        run: |
+          echo "Generating coverage data for SonarQube..."
+          cd code/c/build
+          make coverage-gcov
+          echo "Coverage files generated:"
+          find . -name "*.gcov" | head -10
+      - name: Upload Build Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: compile-commands
-          path: code/c/build/compile_commands.json
+          name: c-build-artifacts
+          path: |
+            code/c/build/compile_commands.json
+            code/c/build/*.gcov
           retention-days: 1
   SonarCloud:
     needs: [RunPythonTests, BuildCProject]
@@ -81,10 +90,12 @@ jobs:
           echo "Moving artifacts to expected locations..."
           mv artifacts/coverage-report/* ./coverage_report/ 2>/dev/null || mkdir -p ./coverage_report
           mkdir -p code/c/build
-          mv artifacts/compile-commands/* code/c/build/ 2>/dev/null || true
+          mv artifacts/c-build-artifacts/* code/c/build/ 2>/dev/null || true
           echo "Artifacts organized:"
           ls -la ./coverage_report/
           ls -la code/c/build/
+          echo "Coverage files:"
+          find code/c/build -name "*.gcov" | head -5 || echo "No .gcov files found"
       - name: SonarCloudScan
         uses: SonarSource/sonarqube-scan-action@master
         env:
