@@ -2,9 +2,9 @@
 This script tests the skill_compression.py script.
 
 Ensure you have installed the NLTK and fuzzywuzzy library as well as pytest:
-    pip install nltk
-    pip install fuzzywuzzy
-    pip install pytest
+  pip install nltk
+  pip install fuzzywuzzy
+  pip install pytest
 """
 
 import logging
@@ -132,8 +132,8 @@ def test_coalesce_brands(generate_branded_skill) -> None:
     This test checks that the branded skills are removed from the provided skill.
 
     Args:
-        generate_branded_skill (List[tuple]): A list of tuples containing the test
-                                              data and expected outcome.
+      generate_branded_skill (List[tuple]): A list of tuples containing the test
+                        data and expected outcome.
     """
     logging.info("Testing coalesce_brands...")
     for skill in generate_branded_skill:
@@ -146,8 +146,8 @@ def test_remove_stopwords(generate_stopword) -> None:
     This test checks that the stop word is removed from the provided skill.
 
     Args:
-        generate_stopword (List[tuple]):  list of tuples containing the test data
-                                          and expected outcome.
+      generate_stopword (List[tuple]):  list of tuples containing the test data
+                      and expected outcome.
     """
     logging.info("Testing remove_stopwords...")
     for skill in generate_stopword:
@@ -160,8 +160,8 @@ def test_get_wordnet_pos(generate_wordnet_pos) -> None:
     This test checks that the part of speech is correctly identified.
 
     Args:
-        generate_wordnet_pos (List[tuple]): list of tuples containing the test data
-                                            and expected outcome.
+      generate_wordnet_pos (List[tuple]): list of tuples containing the test data
+                        and expected outcome.
     """
     logging.info("Testing get_wordnet_pos...")
     for skill in generate_wordnet_pos:
@@ -174,8 +174,8 @@ def test_normalize_skill(generate_normalize_skill) -> None:
     This test checks that the skill is normalized correctly.
 
     Args:
-        generate_normalize_skill (List[tuple]): list of tuples containing the test
-                                                data and expected outcome.
+      generate_normalize_skill (List[tuple]): list of tuples containing the test
+                          data and expected outcome.
     """
     logging.info("Testing normalize_skill...")
     lemmatizer = WordNetLemmatizer()
@@ -189,8 +189,8 @@ def test_deduplicate_skills(generate_duplicate_skill) -> None:
     This test checks that duplicate skills are removed from the provided list.
 
     Args:
-        generate_duplicate_skill (List[tuple]): list of tuples containing the test
-                                                data and expected outcome.
+      generate_duplicate_skill (List[tuple]): list of tuples containing the test
+                          data and expected outcome.
     """
     logging.info("Testing deduplicate_skills...")
     for skill in generate_duplicate_skill:
@@ -203,8 +203,8 @@ def test_condense_skills(generate_condense_skills) -> None:
     This test checks that similar skills are condensed into a single skill.
 
     Args:
-        generate_condense_skills (List[tuple]): list of tuples containing the test
-                                                data and expected outcome.
+      generate_condense_skills (List[tuple]): list of tuples containing the test
+                          data and expected outcome.
     """
     logging.info("Testing condense_skills...")
     for skill in generate_condense_skills:
@@ -222,7 +222,7 @@ def test_ingest_skills(generate_test_file):
     This test checks that the skills are ingested correctly.
 
     Args:
-        generate_test_file (str): The test file to ingest.
+      generate_test_file (str): The test file to ingest.
     """
     logging.info("Testing ingest_skills...")
     assert (
@@ -237,8 +237,8 @@ def test_output_skills(generate_skill_output) -> None:
     This test checks that the skills are output correctly.
 
     Args:
-        generate_skill_output (List[tuple]): list of tuples containing the test
-                                             data and expected outcome.
+      generate_skill_output (List[tuple]): list of tuples containing the test
+                         data and expected outcome.
     """
     logging.info("Testing output_skills...")
     skill_compression.output_skills(generate_skill_output[1], generate_skill_output[0])

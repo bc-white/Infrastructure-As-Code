@@ -175,3 +175,20 @@ terraform.rc
 .pytest_cache/
 __pycache__/
 .venv/
+
+# Ignore macOS system files
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Ignore Ruff cache files
+.ruff_cache/
+
+# Ignore coverage reports
+htmlcov/
+.coverage
+.coverage.*
+.nox/
+.pytest_cache/
+nosetests.xml
+coverage.xml
