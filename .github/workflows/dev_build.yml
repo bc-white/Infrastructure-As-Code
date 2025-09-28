@@ -54,8 +54,14 @@ jobs:
             echo "Coverage report not found!"
             exit 1
           fi
+      - name: Verify Sonar Configuration
+        run: |
+          echo "Checking sonar-project.properties file:"
+          cat sonar-project.properties
+          echo "\nLooking for version in sonar-project.properties:"
+          grep "sonar.projectVersion" sonar-project.properties || echo "No version found in properties file"
       - name: SonarCloudScan
-        uses: SonarSource/sonarqube-scan-action@master
+        uses: SonarSource/sonarcloud-github-action@master
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
           SONAR_TOKEN: ${{secrets.SONAR_TOKEN}}
