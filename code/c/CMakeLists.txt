@@ -9,5 +9,26 @@ set(CMAKE_C_STANDARD_REQUIRED ON)
 
 # Setup Learning Project
 project(learning VERSION 0.1.0 LANGUAGES C CXX)
-add_executable(learning src/learning/learning.c)
+
+# Create library for shared code (so tests can link to it)
+add_library(learning_lib STATIC
+    src/learning/learning_lib.c
+)
+target_include_directories(learning_lib PUBLIC src/learning)
+
+# Main executable
+add_executable(learning
+    src/learning/learning.c
+)
+target_link_libraries(learning learning_lib)
 set_target_properties(learning PROPERTIES OUTPUT_NAME "learning.exe")
+
+# Enable testing
+enable_testing()
+
+# Add test executable
+add_executable(test_learning src/learning/tests/test_learning.c)
+target_link_libraries(test_learning learning_lib)
+
+# Register test with CTest
+add_test(NAME LearningTests COMMAND test_learning)

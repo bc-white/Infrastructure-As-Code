@@ -51,6 +51,11 @@ jobs:
           cmake ..
           make
           echo "Build completed successfully"
+      - name: Run C Tests
+        run: |
+          echo "Running C tests with CTest..."
+          cd code/c/build
+          ctest --verbose --output-on-failure
       - name: Upload Compile Commands
         uses: actions/upload-artifact@v4
         with:
