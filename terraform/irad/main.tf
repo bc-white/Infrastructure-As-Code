@@ -49,10 +49,10 @@ provider "kubernetes" {
   }
 }
 provider "helm" {
-  kubernetes {
+  kubernetes = {
     host                   = module.eks.cluster_endpoint
     cluster_ca_certificate = base64decode(module.eks.cluster_certificate_authority_data)
-    exec {
+    exec = {
       api_version = "client.authentication.k8s.io/v1beta1"
       command     = "aws"
       args        = ["eks", "get-token", "--cluster-name", module.eks.cluster_name, "--profile", "IRAD-Admin"]
@@ -120,20 +120,18 @@ module "vpc" {
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
   version = "~> 21.0"
-  cluster_addons = {
+  addons = {
     aws-ebs-csi-driver = {
       service_account_role_arn = module.irsa-ebs-csi.iam_role_arn
     }
   }
-  cluster_name                             = "irad-eks-cluster-${random_string.suffix.result}"
-  cluster_version                          = "1.32"
-  cluster_endpoint_public_access           = true
+  name                                     = "irad-eks-cluster-${random_string.suffix.result}"
+  kubernetes_version                       = "1.32"
+  endpoint_public_access                   = true
   enable_cluster_creator_admin_permissions = true
   vpc_id                                   = module.vpc.vpc_id
   subnet_ids                               = module.vpc.private_subnets
-  eks_managed_node_group_defaults = {
-    ami_type = "AL2023_x86_64_STANDARD"
-  }
+
   eks_managed_node_groups = {
     one = {
       name           = "node-group-1"
