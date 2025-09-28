@@ -28,8 +28,11 @@ endif()
 # Create library for shared code (so tests can link to it)
 add_library(learning_lib STATIC src/learning/learning_lib.c)
 target_include_directories(learning_lib PUBLIC src/learning)
+
+# Main executable
 add_executable(learning src/learning/learning.c)
 target_link_libraries(learning learning_lib)
+set_target_properties(learning PROPERTIES OUTPUT_NAME "learning.exe")
 set_target_properties(learning PROPERTIES OUTPUT_NAME "learning.exe")
 enable_testing()
 add_executable(test_learning src/learning/tests/test_learning.c)
@@ -37,6 +40,10 @@ target_link_libraries(test_learning learning_lib)
 
 # Register test with CTest
 add_test(NAME LearningTests COMMAND test_learning)
+
+# Add a test that runs the main executable to get coverage on main()
+add_test(NAME MainExecutableTest COMMAND learning.exe)
+add_test(NAME MainExecutableWithArgsTest COMMAND learning.exe TestUser)
 
 # Coverage targets (only available when coverage is enabled)
 if(ENABLE_COVERAGE)

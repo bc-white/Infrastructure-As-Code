@@ -79,6 +79,32 @@ int test_format_greeting() {
   return 0;
 }
 
+int test_run_learning_app() {
+  printf("\n=== Testing run_learning_app ===\n");
+
+  // Test with no arguments
+  char *argv1[] = {"program"};
+  int result1 = run_learning_app(1, argv1);
+  TEST_ASSERT(result1 == 0,
+              "run_learning_app should succeed with no arguments");
+
+  // Test with valid argument
+  char *argv2[] = {"program", "World"};
+  int result2 = run_learning_app(2, argv2);
+  TEST_ASSERT(result2 == 0,
+              "run_learning_app should succeed with valid argument");
+
+  // Test with very long argument (should cause formatting error)
+  char *argv3[] = {"program", "VeryLongNameThatWillCauseBufferOverflowInFormatt"
+                              "ingFunctionBecauseItIsWayTooLong"};
+  int result3 = run_learning_app(2, argv3);
+  TEST_ASSERT(
+      result3 == 1,
+      "run_learning_app should fail with argument that causes buffer overflow");
+
+  return 0;
+}
+
 int main(void) {
   printf("Running Learning Tests...\n");
 
@@ -86,6 +112,7 @@ int main(void) {
 
   failures += test_get_greeting_message();
   failures += test_format_greeting();
+  failures += test_run_learning_app();
 
   printf("\n=== Test Summary ===\n");
   if (failures == 0) {
