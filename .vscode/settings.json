@@ -1,4 +1,8 @@
 {
+  "C_Cpp.autocomplete": "default",
+  "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
+  "C_Cpp.intelliSenseEngine": "default",
+  "makefile.compileCommandsPath": ".vscode/compile_commands.json",
   "sonarlint.connectedMode.project": {
     "connectionId": "Dell-Laptop-VSCode",
     "projectKey": "bc-white_Infrastructure-As-Code"
