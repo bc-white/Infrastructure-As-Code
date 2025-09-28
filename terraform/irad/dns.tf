@@ -47,13 +47,18 @@ data "aws_iam_policy_document" "route_53_ksk_policy" {
   }
 }
 module "r53_zones" {
-  source  = "terraform-aws-modules/route53/aws"
-  name    = "<URL.COM>"
-  comment = "<URL> DNS zone"
+  source  = "terraform-aws-modules/route53/aws//modules/zones"
+  version = "~> 4.0"
+  zones = {
+    "<URL.COM>" = {
+      comment = "<URL> DNS zone"
+    }
+  }
 }
 
 module "certificate_manager" {
   source      = "terraform-aws-modules/acm/aws"
+  version     = "~> 5.0"
   domain_name = "<URL.COM>"
   subject_alternative_names = [
     "*.<URL.COM>"
@@ -63,7 +68,7 @@ module "certificate_manager" {
   }
   validation_method   = "DNS"
   wait_for_validation = false
-  zone_id             = module.r53_zones.id
+  zone_id             = module.r53_zones.route53_zone_zone_id["<URL.COM>"]
 }
 
 resource "aws_kms_key" "route_53_ksk_kms_key" {

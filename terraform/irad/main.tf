@@ -3,7 +3,7 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = ">= 5.60.0"
+      version = "~> 6.0"
     }
     random = {
       source  = "hashicorp/random"
@@ -18,19 +18,19 @@ terraform {
       version = ">= 2.15"
     }
   }
-  backend "s3" {
-    encrypt        = true
-    region         = "us-east-1"
-    bucket         = "irad-terraform-state-rsh0"
-    key            = "tf-state"
-    dynamodb_table = "tf_locks"
-    profile        = "IRAD-Admin"
-  }
+  # backend "s3" {
+  #   encrypt      = true
+  #   region       = "us-east-1"
+  #   bucket       = "irad-terraform-state-rsh0"
+  #   key          = "tf-state"
+  #   use_lockfile = true
+  #   profile      = "IRAD-Admin"
+  # }
 }
 
 provider "aws" {
   region  = "us-east-1"
-  profile = "IRAD-Admin"
+  # profile = "IRAD-Admin"
   default_tags {
     tags = {
       Environment = "prod"
@@ -86,7 +86,7 @@ resource "aws_dynamodb_table" "tf_locks" {
 
 module "tf_state_bucket" {
   source              = "terraform-aws-modules/s3-bucket/aws"
-  version             = ">= 4.6.0"
+  version             = "~> 4.6"
   bucket              = lower("irad-terraform-state-${random_string.suffix.result}")
   block_public_acls   = true
   block_public_policy = true
@@ -119,7 +119,7 @@ module "vpc" {
 
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
-  version = "~> 20.31"
+  version = "~> 21.0"
   cluster_addons = {
     aws-ebs-csi-driver = {
       service_account_role_arn = module.irsa-ebs-csi.iam_role_arn
@@ -158,7 +158,7 @@ data "aws_iam_policy" "ebs_csi_policy" {
 
 module "irsa-ebs-csi" {
   source                        = "terraform-aws-modules/iam/aws//modules/iam-assumable-role-with-oidc"
-  version                       = "5.39.0"
+  version                       = "~> 5.48"
   create_role                   = true
   role_name                     = "AmazonEKSTFEBSCSIRole-${module.eks.cluster_name}"
   provider_url                  = module.eks.oidc_provider
@@ -189,7 +189,7 @@ resource "kubernetes_storage_class" "ebs_gp3" {
 # AWS Load Balancer Controller IAM Role
 module "aws_load_balancer_controller_irsa_role" {
   source                                 = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
-  version                                = "5.39.0"
+  version                                = "~> 5.48"
   role_name                              = "aws-load-balancer-controller-${module.eks.cluster_name}"
   attach_load_balancer_controller_policy = false
   role_policy_arns = {
@@ -213,30 +213,22 @@ resource "helm_release" "aws_load_balancer_controller" {
   chart      = "aws-load-balancer-controller"
   namespace  = "kube-system"
   version    = "1.11.0"
-  set {
-    name  = "clusterName"
-    value = module.eks.cluster_name
-  }
-  set {
-    name  = "serviceAccount.create"
-    value = "true"
-  }
-  set {
-    name  = "serviceAccount.name"
-    value = "aws-load-balancer-controller"
-  }
-  set {
-    name  = "serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
-    value = module.aws_load_balancer_controller_irsa_role.iam_role_arn
-  }
-  set {
-    name  = "region"
-    value = data.aws_region.current_region.name
-  }
-  set {
-    name  = "vpcId"
-    value = module.vpc.vpc_id
-  }
+
+  values = [
+    yamlencode({
+      clusterName = module.eks.cluster_name
+      serviceAccount = {
+        create = true
+        name   = "aws-load-balancer-controller"
+        annotations = {
+          "eks.amazonaws.com/role-arn" = module.aws_load_balancer_controller_irsa_role.iam_role_arn
+        }
+      }
+      region = data.aws_region.current_region.name
+      vpcId  = module.vpc.vpc_id
+    })
+  ]
+
   depends_on = [
     module.eks,
     module.aws_load_balancer_controller_irsa_role
