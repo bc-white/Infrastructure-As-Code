@@ -1,5 +1,0 @@
-fuzzywuzzy
-nltk
-pre-commit
-pytest
-pytest-cov
