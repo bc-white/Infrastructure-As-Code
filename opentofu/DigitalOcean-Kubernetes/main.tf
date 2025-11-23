@@ -62,6 +62,7 @@ resource "kubernetes_deployment" "ingress_controller" {
         }
       }
       spec {
+        service_account_name = kubernetes_service_account.ingress_sa.metadata[0].name
         container {
           name  = "controller"
           # Pin image via variable for controlled upgrades; prefer digest pinning for supply-chain integrity.
@@ -125,6 +126,75 @@ resource "kubernetes_deployment" "ingress_controller" {
     }
   }
 }
+
+resource "kubernetes_service_account" "ingress_sa" {
+  metadata {
+    name      = "ingress-nginx"
+    namespace = kubernetes_namespace.ingress.metadata[0].name
+    labels = {
+      app = "ingress-nginx"
+    }
+  }
+}
+
+resource "kubernetes_cluster_role" "ingress" {
+  metadata {
+    name = "ingress-nginx"
+    labels = {
+      app = "ingress-nginx"
+    }
+  }
+  rule {
+    api_groups = [""]
+    resources  = ["configmaps", "endpoints", "nodes", "pods", "secrets", "services"]
+    verbs      = ["list", "watch"]
+  }
+  rule {
+    api_groups = [""]
+    resources  = ["nodes"]
+    verbs      = ["get"]
+  }
+  rule {
+    api_groups = [""]
+    resources  = ["events"]
+    verbs      = ["create", "patch"]
+  }
+  rule {
+    api_groups = ["networking.k8s.io"]
+    resources  = ["ingresses", "ingressclasses"]
+    verbs      = ["get", "list", "watch"]
+  }
+  rule {
+    api_groups = ["networking.k8s.io"]
+    resources  = ["ingresses/status"]
+    verbs      = ["update"]
+  }
+  rule {
+    api_groups = ["coordination.k8s.io"]
+    resources  = ["leases"]
+    verbs      = ["get", "create", "update"]
+  }
+}
+
+resource "kubernetes_cluster_role_binding" "ingress" {
+  metadata {
+    name = "ingress-nginx"
+    labels = {
+      app = "ingress-nginx"
+    }
+  }
+  subject {
+    kind      = "ServiceAccount"
+    name      = kubernetes_service_account.ingress_sa.metadata[0].name
+    namespace = kubernetes_namespace.ingress.metadata[0].name
+  }
+  role_ref {
+    kind     = "ClusterRole"
+    name     = kubernetes_cluster_role.ingress.metadata[0].name
+    api_group = "rbac.authorization.k8s.io"
+  }
+}
+
 
 resource "kubernetes_service" "ingress_lb" {
   depends_on = [kubernetes_deployment.ingress_controller]
