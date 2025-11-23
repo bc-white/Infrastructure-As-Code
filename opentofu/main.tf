@@ -10,3 +10,8 @@ terraform {
     }
   }
 }
+
+resource "digitalocean_spaces_bucket" "foobar" {
+  name   = "bcwhite-tech-opentofu-state"
+  region = "nyc3"
+}
