@@ -18,10 +18,3 @@ To get started with this repository, you can follow these steps:
    pre-commit install
    pre-commit run --all-files
    ```
-
-## Repository Contents
-
-This repository contains the following items:
-
-- Genral scripts for performing various tasks
-  - Powershell scripts for Windows automation tasks
