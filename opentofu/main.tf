@@ -11,7 +11,7 @@ terraform {
   }
   backend "s3" {
     bucket                      = "bcwhite-tech-opentofu-state"
-    key                         = "environment/development/terraform.tfstate"
+    key                         = "terraform.tfstate"
     region                      = "us-east-1"
     endpoint                    = "https://nyc3.digitaloceanspaces.com"
     skip_region_validation      = true
