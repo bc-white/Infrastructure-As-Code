@@ -25,3 +25,19 @@ resource "digitalocean_spaces_bucket" "state-bucket" {
   name   = "bcwhite-tech-opentofu-state"
   region = "nyc3"
 }
+
+resource "digitalocean_kubernetes_cluster" "kube_cluster" {
+  name         = "bcwhite-tech-kube-cluster"
+  region       = "nyc3"
+  auto_upgrade = true
+  version      = "latest"
+  maintenance_policy {
+    start_time = "04:00"
+    day        = "sunday"
+  }
+  node_pool {
+    name       = "default"
+    size       = "s-1vcpu-2gb"
+    node_count = 2
+  }
+}
