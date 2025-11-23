@@ -127,6 +127,7 @@ resource "kubernetes_deployment" "ingress_controller" {
 }
 
 resource "kubernetes_service" "ingress_lb" {
+  depends_on = [kubernetes_deployment.ingress_controller]
   metadata {
     name      = "ingress-nginx-controller"
     namespace = kubernetes_namespace.ingress.metadata[0].name
@@ -150,5 +151,4 @@ resource "kubernetes_service" "ingress_lb" {
     }
     type = "LoadBalancer"
   }
-  depends_on = [kubernetes_deployment.ingress_controller]
 }
