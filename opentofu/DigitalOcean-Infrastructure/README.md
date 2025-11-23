@@ -2,7 +2,6 @@
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_cloudflare"></a> [cloudflare](#requirement\_cloudflare) | ~> 5 |
 | <a name="requirement_digitalocean"></a> [digitalocean](#requirement\_digitalocean) | ~> 2.0 |
 
 ## Providers
