@@ -7,6 +7,7 @@ variable "cloudflare_record_name" {
 variable "cloudflare_zone_id" {
   description = "Cloudflare Zone ID for the root domain (e.g. bcwhite.tech)."
   type        = string
+  default     = "bcwhite.tech"
   validation {
     condition     = length(var.cloudflare_zone_id) > 0
     error_message = "cloudflare_zone_id cannot be empty."
