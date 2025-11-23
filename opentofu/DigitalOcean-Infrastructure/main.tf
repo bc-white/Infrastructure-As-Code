@@ -21,6 +21,8 @@ terraform {
   }
 }
 
+data "digitalocean_kubernetes_versions" "current" {}
+
 resource "digitalocean_spaces_bucket" "state-bucket" {
   name   = "bcwhite-tech-opentofu-state"
   region = "nyc3"
@@ -30,7 +32,7 @@ resource "digitalocean_kubernetes_cluster" "kube_cluster" {
   name         = "bcwhite-tech-kube-cluster"
   region       = "nyc3"
   auto_upgrade = true
-  version      = "latest"
+  version      = data.digitalocean_kubernetes_versions.current.latest_version
   maintenance_policy {
     start_time = "04:00"
     day        = "sunday"
@@ -40,4 +42,8 @@ resource "digitalocean_kubernetes_cluster" "kube_cluster" {
     size       = "s-1vcpu-2gb"
     node_count = 1
   }
+  tags = [
+    "env-${terraform.workspace}",
+    "project-bcwhite-tech"
+  ]
 }
