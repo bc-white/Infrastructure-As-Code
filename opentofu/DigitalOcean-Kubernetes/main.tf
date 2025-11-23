@@ -41,6 +41,7 @@ resource "kubernetes_namespace" "ingress" {
 }
 
 resource "kubernetes_deployment" "ingress_controller" {
+  depends_on = [kubernetes_service.ingress_lb]
   metadata {
     name      = "ingress-nginx-controller"
     namespace = kubernetes_namespace.ingress.metadata[0].name
@@ -63,6 +64,13 @@ resource "kubernetes_deployment" "ingress_controller" {
       }
       spec {
         service_account_name = kubernetes_service_account.ingress_sa.metadata[0].name
+        security_context {
+          fs_group = 101
+        }
+        volume {
+          name = "ssl"
+          empty_dir {}
+        }
         container {
           name  = "controller"
           # Pin image via variable for controlled upgrades; prefer digest pinning for supply-chain integrity.
@@ -74,6 +82,23 @@ resource "kubernetes_deployment" "ingress_controller" {
             "--controller-class=k8s.io/ingress-nginx",
             "--ingress-class=nginx"
           ]
+          # Downward API env vars required so $(POD_NAMESPACE) expands; without these the controller cannot locate its Service.
+          env {
+            name = "POD_NAME"
+            value_from {
+              field_ref {
+                field_path = "metadata.name"
+              }
+            }
+          }
+          env {
+            name = "POD_NAMESPACE"
+            value_from {
+              field_ref {
+                field_path = "metadata.namespace"
+              }
+            }
+          }
           resources {
             limits = {
               cpu    = "300m"
@@ -121,6 +146,10 @@ resource "kubernetes_deployment" "ingress_controller" {
             initial_delay_seconds = 10
             period_seconds        = 30
           }
+          volume_mount {
+            name       = "ssl"
+            mount_path = "/etc/ingress-controller/ssl"
+          }
         }
       }
     }
@@ -146,12 +175,17 @@ resource "kubernetes_cluster_role" "ingress" {
   }
   rule {
     api_groups = [""]
-    resources  = ["configmaps", "endpoints", "nodes", "pods", "secrets", "services"]
+    resources  = ["configmaps", "endpoints", "nodes", "pods", "secrets", "services", "namespaces"]
     verbs      = ["list", "watch"]
   }
   rule {
     api_groups = [""]
     resources  = ["nodes"]
+    verbs      = ["get"]
+  }
+  rule {
+    api_groups = [""]
+    resources  = ["services"]
     verbs      = ["get"]
   }
   rule {
@@ -174,6 +208,11 @@ resource "kubernetes_cluster_role" "ingress" {
     resources  = ["leases"]
     verbs      = ["get", "create", "update"]
   }
+  rule {
+    api_groups = ["discovery.k8s.io"]
+    resources  = ["endpointslices"]
+    verbs      = ["list", "watch"]
+  }
 }
 
 resource "kubernetes_cluster_role_binding" "ingress" {
@@ -195,9 +234,60 @@ resource "kubernetes_cluster_role_binding" "ingress" {
   }
 }
 
+# Namespace-scoped Role for fine-grained configmap/event access (leader election & events)
+resource "kubernetes_role" "ingress" {
+  metadata {
+    name      = "ingress-nginx"
+    namespace = kubernetes_namespace.ingress.metadata[0].name
+    labels = {
+      app = "ingress-nginx"
+    }
+  }
+  rule {
+    api_groups = [""]
+    resources  = ["configmaps", "pods", "secrets", "endpoints"]
+    verbs      = ["get", "list", "watch"]
+  }
+  rule {
+    api_groups = [""]
+    resources  = ["configmaps"]
+    verbs      = ["create"]
+  }
+  rule {
+    api_groups = [""]
+    resources  = ["configmaps"]
+    resource_names = ["ingress-controller-leader"]
+    verbs      = ["get", "update", "patch"]
+  }
+  rule {
+    api_groups = [""]
+    resources  = ["events"]
+    verbs      = ["create", "patch"]
+  }
+}
+
+resource "kubernetes_role_binding" "ingress" {
+  metadata {
+    name      = "ingress-nginx"
+    namespace = kubernetes_namespace.ingress.metadata[0].name
+    labels = {
+      app = "ingress-nginx"
+    }
+  }
+  subject {
+    kind      = "ServiceAccount"
+    name      = kubernetes_service_account.ingress_sa.metadata[0].name
+    namespace = kubernetes_namespace.ingress.metadata[0].name
+  }
+  role_ref {
+    api_group = "rbac.authorization.k8s.io"
+    kind      = "Role"
+    name      = kubernetes_role.ingress.metadata[0].name
+  }
+}
+
 
 resource "kubernetes_service" "ingress_lb" {
-  depends_on = [kubernetes_deployment.ingress_controller]
   metadata {
     name      = "ingress-nginx-controller"
     namespace = kubernetes_namespace.ingress.metadata[0].name
@@ -210,11 +300,13 @@ resource "kubernetes_service" "ingress_lb" {
       app = "ingress-nginx"
     }
     port {
+      name        = "http"
       port        = 80
       target_port = 80
       protocol    = "TCP"
     }
     port {
+      name        = "https"
       port        = 443
       target_port = 443
       protocol    = "TCP"
