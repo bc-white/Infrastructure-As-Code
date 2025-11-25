@@ -44,12 +44,12 @@ variable "ingress_nginx_chart_version" {
 }
 
 variable "ingress_nginx_controller_version" {
-  description = "Ingress NGINX controller image tag (e.g. v1.11.1)."
+  description = "Ingress NGINX controller image tag (e.g. v1.14.0)."
   type        = string
   default     = "v1.14.0"
   validation {
     condition = can(regex("^v[0-9]+\\.[0-9]+\\.[0-9]+$", var.ingress_nginx_controller_version))
-    error_message = "Version must match pattern vMAJOR.MINOR.PATCH (e.g. v1.11.1)."
+    error_message = "Version must match pattern vMAJOR.MINOR.PATCH (e.g. v1.14.0)."
   }
 }
 
