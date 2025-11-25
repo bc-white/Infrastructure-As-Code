@@ -2,6 +2,7 @@ resource "kubernetes_deployment" "nginx_dev" {
   depends_on = [helm_release.ingress_nginx]
   metadata {
     name = "nginx-dev"
+    namespace = "default"
     labels = { app = "nginx-dev" }
   }
   spec {
@@ -44,7 +45,10 @@ resource "kubernetes_deployment" "nginx_dev" {
 }
 
 resource "kubernetes_service" "nginx_dev" {
-  metadata { name = "nginx-dev" }
+  metadata {
+    name = "nginx-dev"
+    namespace = "default"
+  }
   spec {
     selector = { app = "nginx-dev" }
     port {
@@ -59,6 +63,7 @@ resource "kubernetes_ingress_v1" "nginx_dev" {
   depends_on = [kubernetes_service.nginx_dev, helm_release.ingress_nginx]
   metadata {
     name = "nginx-dev"
+    namespace = "default"
     annotations = {
       "nginx.ingress.kubernetes.io/rewrite-target" = "/"
     }
