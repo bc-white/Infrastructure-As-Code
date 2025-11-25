@@ -1,0 +1,8 @@
+controller:
+  publishService:
+    enabled: true
+  image:
+    tag: ${controller_image_tag}
+  config:
+    proxy-body-size: 64m
+    server-tokens: "false"
