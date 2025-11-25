@@ -29,7 +29,7 @@ variable "cloudflare_zone_name" {
   default     = "bcwhite.tech"
   validation {
     condition = length(var.cloudflare_zone_name) > 0
-    error_message = "The Cloudflare zone name cannot be empty"
+    error_message = "The Cloudflare zone name cannot be empty."
   }
 }
 
