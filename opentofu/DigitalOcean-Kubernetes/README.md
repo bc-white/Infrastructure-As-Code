@@ -4,7 +4,7 @@
 |------|---------|
 | <a name="requirement_cloudflare"></a> [cloudflare](#requirement\_cloudflare) | ~> 5.0 |
 | <a name="requirement_digitalocean"></a> [digitalocean](#requirement\_digitalocean) | ~> 2.0 |
-| <a name="requirement_helm"></a> [helm](#requirement\_helm) | ~> 2.12 |
+| <a name="requirement_helm"></a> [helm](#requirement\_helm) | ~> 3.0 |
 | <a name="requirement_kubernetes"></a> [kubernetes](#requirement\_kubernetes) | ~> 2.19.0 |
 
 ## Providers
