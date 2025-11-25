@@ -38,11 +38,11 @@ No modules.
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_cloudflare_record_name"></a> [cloudflare\_record\_name](#input\_cloudflare\_record\_name) | Subdomain to associate with the ingress LoadBalancer. Use '@' for the root. | `string` | `"dev"` | no |
-| <a name="input_cloudflare_zone_id"></a> [cloudflare\_zone\_id](#input\_cloudflare\_zone\_id) | Cloudflare Zone ID (32-char hex) from dashboard/API (NOT the zone name). | `string` | `""` | no |
+| <a name="input_cloudflare_zone_id"></a> [cloudflare\_zone\_id](#input\_cloudflare\_zone\_id) | Cloudflare Zone ID (32-char hex) from dashboard/API (NOT the zone name). | `string` | n/a | yes |
 | <a name="input_cloudflare_zone_name"></a> [cloudflare\_zone\_name](#input\_cloudflare\_zone\_name) | Root domain managed in Cloudflare. | `string` | `"bcwhite.tech"` | no |
 | <a name="input_ingress_nginx_chart_version"></a> [ingress\_nginx\_chart\_version](#input\_ingress\_nginx\_chart\_version) | Helm chart version for ingress-nginx (e.g. 4.10.0). | `string` | `"4.10.0"` | no |
 | <a name="input_ingress_nginx_controller_version"></a> [ingress\_nginx\_controller\_version](#input\_ingress\_nginx\_controller\_version) | Ingress NGINX controller image tag (e.g. v1.11.1). | `string` | `"v1.14.0"` | no |
-| <a name="input_kubernetes_cluster"></a> [kubernetes\_cluster](#input\_kubernetes\_cluster) | n/a | `string` | `"bcwhite-tech-kube-cluster"` | no |
+| <a name="input_kubernetes_cluster"></a> [kubernetes\_cluster](#input\_kubernetes\_cluster) | Name of the DigitalOcean Kubernetes cluster to deploy to. | `string` | `"bcwhite-tech-kube-cluster"` | no |
 
 ## Outputs
 

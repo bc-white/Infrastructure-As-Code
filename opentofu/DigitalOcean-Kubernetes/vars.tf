@@ -7,7 +7,6 @@ variable "cloudflare_record_name" {
 variable "cloudflare_zone_id" {
   type        = string
   description = "Cloudflare Zone ID (32-char hex) from dashboard/API (NOT the zone name)."
-  default     = ""
   validation {
     condition     = length(var.cloudflare_zone_id) == 32 && can(regex("^[a-f0-9]{32}$", var.cloudflare_zone_id))
     error_message = "Provide the 32-character hexadecimal Zone ID, not the domain name (e.g. bcwhite.tech)."
@@ -45,10 +44,11 @@ variable "ingress_nginx_controller_version" {
 }
 
 variable "kubernetes_cluster" {
+  description = "Name of the DigitalOcean Kubernetes cluster to deploy to."
   type = string
   default = "bcwhite-tech-kube-cluster"
   validation {
     condition = length(var.kubernetes_cluster) > 0
-    error_message = "The cluster name cannot be empty"
+    error_message = "The cluster name cannot be empty."
   }
 }
