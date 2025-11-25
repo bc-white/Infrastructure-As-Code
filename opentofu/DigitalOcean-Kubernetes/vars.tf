@@ -1,7 +1,17 @@
+# TTL of 1 means "automatic" in Cloudflare's API. See https://api.cloudflare.com/#dns-records-for-a-zone-create-dns-record
+variable "cloudflare_dns_ttl_automatic" {
+  description = "TTL value of 1 means 'automatic' in Cloudflare's API"
+  type        = number
+  default     = 1
+}
 variable "cloudflare_record_name" {
   description = "Subdomain to associate with the ingress LoadBalancer. Use '@' for the root."
   type        = string
   default     = "dev"
+  validation {
+    condition = length(var.cloudflare_record_name) > 0
+    error_message = "Cloudflare record name cannot be empty."
+  }
 }
 
 variable "cloudflare_zone_id" {

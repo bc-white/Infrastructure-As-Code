@@ -37,6 +37,7 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| <a name="input_cloudflare_dns_ttl_automatic"></a> [cloudflare\_dns\_ttl\_automatic](#input\_cloudflare\_dns\_ttl\_automatic) | TTL value of 1 means 'automatic' in Cloudflare's API | `number` | `1` | no |
 | <a name="input_cloudflare_record_name"></a> [cloudflare\_record\_name](#input\_cloudflare\_record\_name) | Subdomain to associate with the ingress LoadBalancer. Use '@' for the root. | `string` | `"dev"` | no |
 | <a name="input_cloudflare_zone_id"></a> [cloudflare\_zone\_id](#input\_cloudflare\_zone\_id) | Cloudflare Zone ID (32-char hex) from dashboard/API (NOT the zone name). | `string` | n/a | yes |
 | <a name="input_cloudflare_zone_name"></a> [cloudflare\_zone\_name](#input\_cloudflare\_zone\_name) | Root domain managed in Cloudflare. | `string` | `"bcwhite.tech"` | no |
