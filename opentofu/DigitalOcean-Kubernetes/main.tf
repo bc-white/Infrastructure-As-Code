@@ -29,19 +29,23 @@ terraform {
   }
 }
 
+locals {
+  cluster_endpoint = data.digitalocean_kubernetes_cluster.bcwhite-tech-k8s-cluster.endpoint
+  cluster_token = data.digitalocean_kubernetes_cluster.bcwhite-tech-k8s-cluster.kube_config[0].token
+  cluster_ca_cert = base64decode(data.digitalocean_kubernetes_cluster.bcwhite-tech-k8s-cluster.kube_config[0].cluster_ca_certificate)
+}
+
 provider "kubernetes" {
-  host  = data.digitalocean_kubernetes_cluster.bcwhite-tech-k8s-cluster.endpoint
-  token = data.digitalocean_kubernetes_cluster.bcwhite-tech-k8s-cluster.kube_config[0].token
-  cluster_ca_certificate = base64decode(
-    data.digitalocean_kubernetes_cluster.bcwhite-tech-k8s-cluster.kube_config[0].cluster_ca_certificate
-  )
+  host  = local.cluster_endpoint
+  token = local.cluster_token
+  cluster_ca_certificate = local.cluster_ca_cert
 }
 
 provider "helm" {
   kubernetes {
-    host                   = data.digitalocean_kubernetes_cluster.bcwhite-tech-k8s-cluster.endpoint
-    token                  = data.digitalocean_kubernetes_cluster.bcwhite-tech-k8s-cluster.kube_config[0].token
-    cluster_ca_certificate = base64decode(data.digitalocean_kubernetes_cluster.bcwhite-tech-k8s-cluster.kube_config[0].cluster_ca_certificate)
+    host                   = local.cluster_endpoint
+    token                  = local.cluster_token
+    cluster_ca_certificate = local.cluster_ca_cert
   }
 }
 
