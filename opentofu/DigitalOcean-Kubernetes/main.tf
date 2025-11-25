@@ -10,7 +10,7 @@ terraform {
     }
     helm = {
       source  = "hashicorp/helm"
-      version = "~> 2.12"
+      version = "~> 3.0"
     }
     cloudflare = {
       source  = "cloudflare/cloudflare"
@@ -42,7 +42,7 @@ provider "kubernetes" {
 }
 
 provider "helm" {
-  kubernetes {
+  kubernetes = {
     host                   = local.cluster_endpoint
     token                  = local.cluster_token
     cluster_ca_certificate = local.cluster_ca_cert
