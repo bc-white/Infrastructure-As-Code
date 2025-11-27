@@ -4,6 +4,7 @@ variable "cloudflare_dns_ttl_automatic" {
   type        = number
   default     = 1
 }
+
 variable "cloudflare_record_name" {
   description = "Subdomain to associate with the ingress LoadBalancer. Use '@' for the root."
   type        = string
