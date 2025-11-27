@@ -17,6 +17,8 @@ terraform {
   }
 }
 
+provider "cloudflare" {}
+
 data "digitalocean_kubernetes_versions" "current" {}
 
 resource "digitalocean_spaces_bucket" "state-bucket" {
