@@ -4,6 +4,10 @@ terraform {
       source  = "digitalocean/digitalocean"
       version = "~> 2.0"
     }
+    cloudflare = {
+      source  = "cloudflare/cloudflare"
+      version = "~> 5.0"
+    }
   }
   backend "s3" {
     bucket                      = "bcwhite-tech-opentofu-state"
@@ -16,8 +20,6 @@ terraform {
     force_path_style            = true
   }
 }
-
-provider "cloudflare" {}
 
 data "digitalocean_kubernetes_versions" "current" {}
 
