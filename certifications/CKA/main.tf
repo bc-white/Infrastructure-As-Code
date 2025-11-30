@@ -4,6 +4,10 @@ terraform {
       source  = "digitalocean/digitalocean"
       version = "~> 2.0"
     }
+    tls_private_key = {
+      source  = "hashicorp/tls"
+      version = "~> 4.0"
+    }
   }
   backend "s3" {
     bucket                      = "bcwhite-tech-opentofu-state"
@@ -15,4 +19,38 @@ terraform {
     skip_requesting_account_id  = true
     force_path_style            = true
   }
+}
+
+resource "tls_private_key" "server_key" {
+  algorithm = "RSA"
+  rsa_bits  = 4096
+}
+
+resource "digitalocean_ssh_key" "kubernetes_ssh_key" {
+  name       = "kubernetes-development-ssh-key"
+  public_key = tls_private_key.server_key.public_key_openssh
+}
+
+resource "digitalocean_vpc" "kubernetes_vpc_1" {
+  name     = "kubernetes-development-network"
+  region   = "nyc3"
+  ip_range = "10.10.10.0/24"
+}
+
+resource "digitalocean_droplet" "kubernetes_control_plane_1" {
+  name   = "k8s-control-plane"
+  region = "nyc3"
+  size   = "s-2vcpu-4gb"
+  image  = "ubuntu-24-04-x64"
+  vpc_uuid = digitalocean_vpc.kubernetes_vpc_1.id
+  tags = ["kubernetes", "control-plane","development"]
+}
+
+resource "digitalocean_droplet" "kubernetes_worker_1" {
+  name   = "k8s-worker-1"
+  region = "nyc3"
+  size   = "s-2vcpu-4gb"
+  image  = "ubuntu-24-04-x64"
+  vpc_uuid = digitalocean_vpc.kubernetes_vpc_1.id
+  tags = ["kubernetes", "worker","development"]
 }
