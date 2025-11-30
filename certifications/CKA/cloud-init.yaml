@@ -1,0 +1,9 @@
+#cloud-config
+  package_update: true
+  package_upgrade: true
+  packages:
+    - unattended-upgrades
+
+  runcmd:
+    - apt-get install -y unattended-upgrades
+    - dpkg-reconfigure -f noninteractive unattended-upgrades

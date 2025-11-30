@@ -42,6 +42,7 @@ resource "digitalocean_droplet" "kubernetes_control_plane_1" {
   region = "nyc3"
   size   = "s-2vcpu-4gb"
   image  = "ubuntu-24-04-x64"
+  user_data = file("cloud-init.yaml")
   vpc_uuid = digitalocean_vpc.kubernetes_vpc_1.id
   tags = ["kubernetes", "control-plane","development"]
 }
@@ -51,6 +52,7 @@ resource "digitalocean_droplet" "kubernetes_worker_1" {
   region = "nyc3"
   size   = "s-2vcpu-4gb"
   image  = "ubuntu-24-04-x64"
+  user_data = file("cloud-init.yaml")
   vpc_uuid = digitalocean_vpc.kubernetes_vpc_1.id
   tags = ["kubernetes", "worker","development"]
 }
