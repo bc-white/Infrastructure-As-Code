@@ -37,6 +37,16 @@ resource "digitalocean_vpc" "kubernetes_vpc_1" {
   ip_range = "10.10.10.0/24"
 }
 
+resource "digitalocean_firewall" "kubernetes_firewall" {
+  name = "web-fw"
+  tags = ["cka"]
+  inbound_rule {
+    protocol         = "tcp"
+    port_range       = "443"
+    source_addresses = [var.local_ip]
+  }
+}
+
 resource "digitalocean_droplet" "kubernetes_control_plane_1" {
   name   = "k8s-control-plane"
   region = "nyc3"
@@ -44,7 +54,7 @@ resource "digitalocean_droplet" "kubernetes_control_plane_1" {
   image  = "ubuntu-24-04-x64"
   user_data = file("cloud-init.yaml")
   vpc_uuid = digitalocean_vpc.kubernetes_vpc_1.id
-  tags = ["kubernetes", "control-plane","development"]
+  tags = ["kubernetes","cka","control-plane","development"]
 }
 
 resource "digitalocean_droplet" "kubernetes_worker_1" {
@@ -54,5 +64,5 @@ resource "digitalocean_droplet" "kubernetes_worker_1" {
   image  = "ubuntu-24-04-x64"
   user_data = file("cloud-init.yaml")
   vpc_uuid = digitalocean_vpc.kubernetes_vpc_1.id
-  tags = ["kubernetes", "worker","development"]
+  tags = ["kubernetes","cka","worker","development"]
 }
