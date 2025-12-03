@@ -4,10 +4,6 @@ terraform {
       source  = "digitalocean/digitalocean"
       version = "~> 2.0"
     }
-    tlsprivatekey = {
-      source  = "hashicorp/tls"
-      version = "~> 4.0"
-    }
   }
   backend "s3" {
     bucket                      = "bcwhite-tech-opentofu-state"
