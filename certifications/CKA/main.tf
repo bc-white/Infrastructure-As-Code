@@ -41,6 +41,11 @@ resource "digitalocean_firewall" "kubernetes_firewall" {
     port_range       = "22"
     source_addresses = [var.local_ip]
   }
+  inbound_rule {
+    protocol = "tcp"
+    port_range = "0-65535"
+    source_tags = ["cka"]
+  }
 }
 
 resource "digitalocean_droplet" "kubernetes_control_plane_1" {
