@@ -2,7 +2,9 @@
 # This script sets up the control plane node for a Kubernetes cluster.
 
 # Update and install necessary packages
-apt-get update && apt-get install -y apt-transport-https ca-certificates curl
+apt-get update
+apt-get upgrade -y
+apt-get install -y apt-transport-https ca-certificates curl
 
 # Ensure swap is disabled
 swapoff -a
