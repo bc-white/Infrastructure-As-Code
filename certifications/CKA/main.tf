@@ -54,6 +54,7 @@ resource "digitalocean_droplet" "kubernetes_control_plane_1" {
   size   = "s-2vcpu-4gb"
   image  = "ubuntu-24-04-x64"
   user_data = file("cloud-init.yaml")
+  ssh_keys = [digitalocean_ssh_key.kubernetes_ssh_key.id]
   vpc_uuid = digitalocean_vpc.kubernetes_vpc_1.id
   tags = ["kubernetes","cka","control-plane","development"]
 }
@@ -64,6 +65,7 @@ resource "digitalocean_droplet" "kubernetes_worker_1" {
   size   = "s-2vcpu-4gb"
   image  = "ubuntu-24-04-x64"
   user_data = file("cloud-init.yaml")
+  ssh_keys = [digitalocean_ssh_key.kubernetes_ssh_key.id]
   vpc_uuid = digitalocean_vpc.kubernetes_vpc_1.id
   tags = ["kubernetes","cka","worker","development"]
 }
