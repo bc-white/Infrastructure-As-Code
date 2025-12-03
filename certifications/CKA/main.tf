@@ -43,7 +43,7 @@ resource "digitalocean_firewall" "kubernetes_firewall" {
   }
   inbound_rule {
     protocol = "tcp"
-    port_range = "0-65535"
+    port_range = "1-65535"
     source_tags = ["cka"]
   }
 }
