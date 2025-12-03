@@ -4,7 +4,7 @@ terraform {
       source  = "digitalocean/digitalocean"
       version = "~> 2.0"
     }
-    tls_private_key = {
+    tlsprivatekey = {
       source  = "hashicorp/tls"
       version = "~> 4.0"
     }
