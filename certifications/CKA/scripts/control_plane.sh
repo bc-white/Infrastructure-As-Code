@@ -4,9 +4,8 @@
 # installs and configures the necessary components. It is cobbled together
 # from things I have learned from various sources including:
 # - Kubernetes documentation
-# - Various blogs and tutorials
 # - CKA curriculum
-# - Various GitHub repositories
+# - Various GitHub repositories, blogs, and tutorials
 # - Personal experience
 ###############################################################################
 
