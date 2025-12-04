@@ -18,7 +18,10 @@ apt-get install -y apt-transport-https \
   gpg \
   kubeadm \
   kubectl \
-  kubelet
+  kubelet \
+  software-properties-common \
+  socat \
+  tree
 apt-mark hold kubeadm kubectl kubelet
 
 # Startup Kubelet service
@@ -30,3 +33,13 @@ swapoff -a
 # Load necessary kernel modules
 modprobe overlay
 modprobe br_netfilter
+
+# Configure sysctl parameters for Kubernetes networking
+cat <<EOF | tee /etc/sysctl.d/kubernetes.conf
+net.bridge.bridge-nf-call-iptables  = 1
+net.ipv4.ip_forward                 = 1
+net.bridge.bridge-nf-call-ip6tables = 1
+EOF
+
+# Apply sysctl parameters without reboot
+sysctl --system
