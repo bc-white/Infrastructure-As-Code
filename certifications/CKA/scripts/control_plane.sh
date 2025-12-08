@@ -112,3 +112,10 @@ kubectl apply -f /etc/kubernetes/cilium.yaml
 # (This is a small cluster for learning purposes)
 ###############################################################################
 kubectl taint nodes --all node-role.kubernetes.io/control-plane-
+
+###############################################################################
+# Setup a basic deployment to test the cluster
+# Run this after the control plane is up and running, the network add-on is
+# installed, and the worker nodes are joined to the cluster.
+###############################################################################
+kubectl create deployment nginx --image=nginx

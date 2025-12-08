@@ -46,6 +46,21 @@ resource "digitalocean_firewall" "kubernetes_firewall" {
     port_range = "1-65535"
     source_tags = ["cka"]
   }
+  inbound_rule {
+    protocol = "tcp"
+    port_range = "1-65535"
+    source_addresses = ["10.0.0.0/8"]
+  }
+  outbound_rule {
+    protocol              = "tcp"
+    port_range            = "1-65535"
+    destination_addresses = ["10.0.0.0/8", "::/0"]
+  }
+  outbound_rule {
+    protocol              = "udp"
+    port_range            = "1-65535"
+    destination_addresses = ["10.0.0.0/8", "::/0"]
+  }
   outbound_rule {
     protocol              = "tcp"
     port_range            = "1-65535"
