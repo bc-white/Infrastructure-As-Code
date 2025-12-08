@@ -106,3 +106,9 @@ helm repo add cilium https://helm.cilium.io/
 helm repo update
 helm template cilium cilium/cilium --version 1.16.1 --namespace kube-system > /etc/kubernetes/cilium.yaml
 kubectl apply -f /etc/kubernetes/cilium.yaml
+
+#############################################################################
+# Remove master node taint to allow scheduling of pods on control plane
+# (This is a small cluster for learning purposes)
+###############################################################################
+kubectl taint nodes --all node-role.kubernetes.io/control-plane-
