@@ -51,6 +51,11 @@ resource "digitalocean_firewall" "kubernetes_firewall" {
     port_range = "1-65535"
     source_addresses = ["10.0.0.0/8"]
   }
+  inbound_rule {
+    protocol = "tcp"
+    port_range = "1-65535"
+    source_addresses = ["192.168.0.0/16"]
+  }
   outbound_rule {
     protocol              = "tcp"
     port_range            = "1-65535"
