@@ -82,8 +82,15 @@ systemctl restart containerd
 echo "Enter the Control Plane Node IP Address:"
 read CONTROL_PLANE_IP
 cat <<EOF | tee /etc/hosts
-`hostname -I | awk '{print $1}'`  worker-node
+`hostname -I | awk '{print $3}'`  worker-node
 ${CONTROL_PLANE_IP}  control-plane
+EOF
+
+###############################################################################
+# Configure Kubelet
+###############################################################################
+cat <<EOF | tee /etc/default/kubelet
+KUBELET_EXTRA_ARGS=--node-ip=`hostname -I | awk '{print $3}'`
 EOF
 
 ###############################################################################

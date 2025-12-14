@@ -80,17 +80,23 @@ systemctl restart containerd
 # Configure Local Network DNS
 ###############################################################################
 cat <<EOF | tee /etc/hosts
-`hostname -I | awk '{print $1}'`  control-plane
+`hostname -I | awk '{print $3}'`  control-plane
 EOF
 
 ###############################################################################
 # Configure Kubeadm and Initialize Control Plane
+# Updated to include node IP of the DO droplet because it was seeing the
+# default eth0 IP address first and using that instead of something that was
+# routable from other nodes.
 ###############################################################################
 cat <<EOF | tee /etc/kubernetes/kubeadm-config.yaml
 apiVersion: kubeadm.k8s.io/v1beta3
 kind: ClusterConfiguration
 kubernetesVersion: `kubectl version| grep Client | cut -d: -f2 | cut -dv -f2`
 controlPlaneEndpoint: "control-plane:6443"
+nodeRegistration:
+  kubeletExtraArgs:
+    node-ip: "`hostname -I | awk '{print $3}'`"
 networking:
   podSubnet: "192.168.0.0/16"
 EOF
@@ -105,6 +111,7 @@ cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 helm repo add cilium https://helm.cilium.io/
 helm repo update
 helm template cilium cilium/cilium --version 1.16.1 --namespace kube-system > /etc/kubernetes/cilium.yaml
+sed -i /etc/kubernetes/cilium.yaml -e 's/cluster-pool-ipv4-cidr: "10.0.0.0\/8"/cluster-pool-ipv4-cidr: "192.168.0.0\/16"/'
 kubectl apply -f /etc/kubernetes/cilium.yaml
 
 #############################################################################
