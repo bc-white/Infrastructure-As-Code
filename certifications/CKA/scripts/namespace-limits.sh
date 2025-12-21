@@ -12,3 +12,24 @@
 ###############################################################################
 # Create the namespace
 ###############################################################################
+kubectl create namespace limited-namespace
+
+###############################################################################
+# Create Resource Quota And Apply It To The Namespace
+###############################################################################
+cat << EOF > ./limited-namespace-quota.yaml
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: limit-resource-range
+spec:
+  limits:
+    - default:
+        cpu: 1
+        memory: 500Mi
+      defaultRequest:
+        cpu: 0.5
+        memory: 100Mi
+      type: Container
+EOF
+kubectl create -f ./limited-namespace-quota.yaml -n limited-namespace
