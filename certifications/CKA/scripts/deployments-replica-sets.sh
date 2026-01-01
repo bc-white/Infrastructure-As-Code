@@ -21,7 +21,7 @@ spec:
   replicas: 2
   selector:
     matchLabels:
-    system: ReplicaOne
+      system: ReplicaOne
   template:
     metadata:
       labels:
