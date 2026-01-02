@@ -41,7 +41,7 @@ kubectl apply -f replica-set.yaml
 ###############################################################################
 
 kubectl create deploy webserver --image nginx:1.22.1 --replicas=2 \
---dry-run=client -o yaml | tee deployment.yaml
+  --dry-run=client -o yaml | tee deployment.yaml
 kubectl apply -f deployment.yaml
 kubectl set image deploy webserver nginx=nginx:1.23.1-alpine --record
 kubectl rollout history deploy webserver
