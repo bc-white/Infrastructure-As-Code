@@ -74,7 +74,7 @@ spec:
   persistentVolumeReclaimPolicy: Retain
   nfs:
     path: /srv/nfs/kubedata
-    server: k8s-control-plane
+    server: control-plane
     readOnly: false
 EOF
 kubectl apply -f pv-nfs.yaml
@@ -92,3 +92,57 @@ spec:
       storage: 200Mi
 EOF
 kubectl apply -f pvc-nfs.yaml
+# Setup Test Pod To Use PVC
+cat <<EOF > pvc-pod.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    deployment.kubernetes.io/revision: "1"
+  generation: 1
+  labels:
+    run: nginx
+  name: pvc-nginx-demo
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      run: nginx
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        run: nginx
+    spec:
+      containers:
+      - image: nginx
+        imagePullPolicy: Always
+        name: nginx
+        volumeMounts:
+        - name: nfs-vol
+          mountPath: /opt
+        ports:
+        - containerPort: 80
+          protocol: TCP
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      volumes:
+      - name: nfs-vol
+        persistentVolumeClaim:
+          claimName: pvc-vol-1
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+EOF
+kubectl apply -f pvc-pod.yaml
+# Verify Pod Is Using PVC
+kubectl exec -it $(kubectl get pod -l run=nginx -o jsonpath="{.items[0].metadata.name}") -- ls -lh /opt
