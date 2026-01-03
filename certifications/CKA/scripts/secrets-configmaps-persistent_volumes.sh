@@ -146,3 +146,4 @@ EOF
 kubectl apply -f pvc-pod.yaml
 # Verify Pod Is Using PVC
 kubectl exec -it $(kubectl get pod -l run=nginx -o jsonpath="{.items[0].metadata.name}") -- ls -lh /opt
+kubectl delete deployment pvc-nginx-demo
