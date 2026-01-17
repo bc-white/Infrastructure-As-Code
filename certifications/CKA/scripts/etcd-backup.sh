@@ -3,7 +3,6 @@
 # This script backs up the existing etcd data. It is cobbled together
 # from things I have learned from various sources including:
 # - Kubernetes documentation
-# - CKA curriculum
 # - Various GitHub repositories, blogs, and tutorials
 # - Personal experience
 ###############################################################################
