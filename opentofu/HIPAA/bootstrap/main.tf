@@ -18,7 +18,11 @@ module "s3_bucket" {
     }
   }
   attach_deny_insecure_transport_policy = true
-
+  acl                     = "private"
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
   lifecycle_rule = [
     {
       id      = "expire-old-versions"
