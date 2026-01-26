@@ -15,7 +15,7 @@ module "guardduty_notifications" {
           identifiers = ["events.amazonaws.com"]
         }
       ]
-      conditions = [
+      condition = [
         {
           test     = "StringEquals"
           variable = "aws:SourceAccount"

@@ -19,6 +19,13 @@ resource "aws_guardduty_detector_feature" "ebs_malware_primary" {
   status      = "ENABLED"
 }
 
+resource "aws_guardduty_publishing_destination" "primary" {
+  detector_id     = aws_guardduty_detector.primary.id
+  destination_arn = module.guardduty_findings_bucket.s3_bucket_arn
+  kms_key_arn     = data.terraform_remote_state.bootstrap.outputs.org_kms_key_arn
+  depends_on      = [module.guardduty_findings_bucket]
+}
+
 resource "aws_guardduty_detector" "dr" {
   provider                     = aws.dr
   enable                       = true
@@ -41,4 +48,12 @@ resource "aws_guardduty_detector_feature" "ebs_malware_dr" {
   detector_id = aws_guardduty_detector.dr.id
   name        = "EBS_MALWARE_PROTECTION"
   status      = "ENABLED"
+}
+
+resource "aws_guardduty_publishing_destination" "dr" {
+  provider        = aws.dr
+  detector_id     = aws_guardduty_detector.dr.id
+  destination_arn = module.guardduty_findings_bucket.s3_bucket_arn
+  kms_key_arn     = data.terraform_remote_state.bootstrap.outputs.org_kms_key_arn
+  depends_on      = [module.guardduty_findings_bucket]
 }

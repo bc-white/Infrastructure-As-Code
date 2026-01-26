@@ -24,29 +24,3 @@ resource "aws_guardduty_organization_configuration_feature" "ebs_malware_primary
 
   depends_on = [aws_guardduty_organization_configuration.primary]
 }
-
-resource "aws_guardduty_organization_configuration" "dr" {
-  provider                         = aws.dr
-  detector_id                      = aws_guardduty_detector.dr.id
-  auto_enable_organization_members = "ALL"
-
-  depends_on = [aws_guardduty_organization_admin_account.main]
-}
-
-resource "aws_guardduty_organization_configuration_feature" "s3_dr" {
-  provider    = aws.dr
-  detector_id = aws_guardduty_detector.dr.id
-  name        = "S3_DATA_EVENTS"
-  auto_enable = "ALL"
-
-  depends_on = [aws_guardduty_organization_configuration.dr]
-}
-
-resource "aws_guardduty_organization_configuration_feature" "ebs_malware_dr" {
-  provider    = aws.dr
-  detector_id = aws_guardduty_detector.dr.id
-  name        = "EBS_MALWARE_PROTECTION"
-  auto_enable = "ALL"
-
-  depends_on = [aws_guardduty_organization_configuration.dr]
-}

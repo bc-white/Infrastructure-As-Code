@@ -99,7 +99,6 @@ module "s3_bucket" {
     }
   }
   attach_deny_insecure_transport_policy = true
-  acl                     = "private"
   block_public_acls       = true
   block_public_policy     = true
   ignore_public_acls      = true
@@ -144,8 +143,10 @@ module "s3_access_logs" {
   attach_elb_log_delivery_policy        = false
   attach_lb_log_delivery_policy         = false
   attach_access_log_delivery_policy     = true
-  acl                     = "log-delivery-write"
-  block_public_acls       = true
+  control_object_ownership = true
+  object_ownership         = "BucketOwnerPreferred"
+  acl                      = "log-delivery-write"
+  block_public_acls        = true
   block_public_policy     = true
   ignore_public_acls      = true
   restrict_public_buckets = true
@@ -214,7 +215,6 @@ module "s3_access_logs_dr" {
     }
   }
   attach_deny_insecure_transport_policy = true
-  acl                                   = "private"
   block_public_acls                     = true
   block_public_policy                   = true
   ignore_public_acls                    = true

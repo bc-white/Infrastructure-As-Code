@@ -17,23 +17,26 @@ module "guardduty_findings_bucket" {
   }
   attach_deny_insecure_transport_policy = true
   attach_policy                         = true
-
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
       {
-        Sid    = "AllowEventBridgeToWriteFindings"
+        Sid    = "AllowGuardDutyGetBucketLocation"
         Effect = "Allow"
         Principal = {
-          Service = "events.amazonaws.com"
+          Service = "guardduty.amazonaws.com"
         }
-        Action   = ["s3:PutObject"]
+        Action   = "s3:GetBucketLocation"
+        Resource = "arn:aws:s3:::${var.org_name}-${var.project_name}-guardduty-findings"
+      },
+      {
+        Sid    = "AllowGuardDutyPutObject"
+        Effect = "Allow"
+        Principal = {
+          Service = "guardduty.amazonaws.com"
+        }
+        Action   = "s3:PutObject"
         Resource = "arn:aws:s3:::${var.org_name}-${var.project_name}-guardduty-findings/*"
-        Condition = {
-          StringEquals = {
-            "aws:SourceAccount" = data.aws_caller_identity.current.account_id
-          }
-        }
       }
     ]
   })
@@ -42,8 +45,6 @@ module "guardduty_findings_bucket" {
     target_bucket = data.terraform_remote_state.bootstrap.outputs.s3_access_logs_bucket_name
     target_prefix = "guardduty-findings/"
   }
-
-  acl = "private"
   block_public_acls                     = true
   block_public_policy                   = true
   ignore_public_acls                    = true
@@ -114,6 +115,20 @@ module "cloudtrail_bucket" {
           Service = "cloudtrail.amazonaws.com"
         }
         Action   = "s3:PutObject"
+        Resource = "arn:aws:s3:::${var.org_name}-${var.project_name}-cloudtrail-logs/AWSLogs/${data.aws_caller_identity.current.account_id}/*"
+        Condition = {
+          StringEquals = {
+            "s3:x-amz-acl" = "bucket-owner-full-control"
+          }
+        }
+      },
+      {
+        Sid    = "AWSCloudTrailOrganizationWrite"
+        Effect = "Allow"
+        Principal = {
+          Service = "cloudtrail.amazonaws.com"
+        }
+        Action   = "s3:PutObject"
         Resource = "arn:aws:s3:::${var.org_name}-${var.project_name}-cloudtrail-logs/AWSLogs/${data.aws_organizations_organization.current.id}/*"
         Condition = {
           StringEquals = {
@@ -127,7 +142,6 @@ module "cloudtrail_bucket" {
     target_bucket = data.terraform_remote_state.bootstrap.outputs.s3_access_logs_bucket_name
     target_prefix = "cloudtrail-logs/"
   }
-  acl                         = "private"
   block_public_acls           = true
   block_public_policy         = true
   ignore_public_acls          = true

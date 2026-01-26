@@ -10,7 +10,13 @@ terraform {
       version = "~> 3.0"
     }
   }
-  backend "local" {}
+  backend "s3" {
+    bucket  = "inspac-mocksurvey365-tofu-state-03e07a7f"
+    key     = "bootstrap/terraform.tfstate"
+    profile = "InsPAC-Admin"
+    region  = "us-east-1"
+    encrypt = true
+  }
 }
 
 data "aws_caller_identity" "current" {}

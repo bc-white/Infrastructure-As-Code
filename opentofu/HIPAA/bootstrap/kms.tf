@@ -5,10 +5,23 @@ data "aws_iam_policy_document" "kms_org_key" {
     principals {
       type = "AWS"
       identifiers = [
-        "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/aws-reserved/sso.amazonaws.com/${var.primary_region}/${var.admin_role_name}"
+        "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/aws-reserved/sso.amazonaws.com/${var.admin_role_name}"
       ]
     }
     actions   = ["kms:*"]
+    resources = ["*"]
+  }
+  statement {
+    sid    = "Allow CloudTrail to decrypt and describe key"
+    effect = "Allow"
+    principals {
+      type        = "Service"
+      identifiers = ["cloudtrail.amazonaws.com"]
+    }
+    actions = [
+      "kms:Decrypt",
+      "kms:DescribeKey"
+    ]
     resources = ["*"]
   }
   statement {
@@ -18,10 +31,7 @@ data "aws_iam_policy_document" "kms_org_key" {
       type        = "Service"
       identifiers = ["cloudtrail.amazonaws.com"]
     }
-    actions = [
-      "kms:GenerateDataKey*",
-      "kms:DecryptDataKey"
-    ]
+    actions   = ["kms:GenerateDataKey*"]
     resources = ["*"]
     condition {
       test     = "StringLike"
@@ -32,28 +42,20 @@ data "aws_iam_policy_document" "kms_org_key" {
     }
   }
   statement {
-    sid    = "Allow CloudTrail to describe key"
-    effect = "Allow"
-    principals {
-      type        = "Service"
-      identifiers = ["cloudtrail.amazonaws.com"]
-    }
-    actions   = ["kms:DescribeKey"]
-    resources = ["*"]
-  }
-  statement {
     sid    = "Allow services to use the key"
     effect = "Allow"
     principals {
       type = "Service"
       identifiers = [
+        "events.amazonaws.com",
+        "guardduty.amazonaws.com",
         "s3.amazonaws.com",
-        "sns.amazonaws.com",
-        "events.amazonaws.com"
+        "sns.amazonaws.com"
       ]
     }
     actions = [
       "kms:Decrypt",
+      "kms:DescribeKey",
       "kms:GenerateDataKey"
     ]
     resources = ["*"]
