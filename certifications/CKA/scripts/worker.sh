@@ -89,7 +89,7 @@ EOF
 # Configure Kubelet
 ###############################################################################
 cat <<EOF | tee /etc/default/kubelet
-KUBELET_EXTRA_ARGS=--node-ip=`hostname -I | awk '{print $3}'`
+KUBELET_EXTRA_ARGS=--node-ip=$(hostname -I | awk '{print $3}')
 EOF
 
 ###############################################################################

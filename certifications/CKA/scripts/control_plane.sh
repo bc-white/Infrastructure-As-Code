@@ -91,11 +91,11 @@ EOF
 cat <<EOF | tee /etc/kubernetes/kubeadm-config.yaml
 apiVersion: kubeadm.k8s.io/v1beta3
 kind: ClusterConfiguration
-kubernetesVersion: `kubectl version| grep Client | cut -d: -f2 | cut -dv -f2`
+kubernetesVersion: $(kubectl version| grep Client | cut -d: -f2 | cut -dv -f2)
 controlPlaneEndpoint: "control-plane:6443"
 nodeRegistration:
   kubeletExtraArgs:
-    node-ip: "`hostname -I | awk '{print $3}'`"
+    node-ip: "$(hostname -I | awk '{print $3}')"
 networking:
   podSubnet: "192.168.0.0/16"
 EOF
