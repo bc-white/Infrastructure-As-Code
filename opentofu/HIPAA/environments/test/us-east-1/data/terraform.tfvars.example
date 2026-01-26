@@ -1,0 +1,4 @@
+admin_role_name = "AWSReservedSSO_AdministratorAccess_xxxxx"
+aws_profile     = "your-aws-profile"
+org_name        = "your-org-name"
+project_name    = "your-project-name"

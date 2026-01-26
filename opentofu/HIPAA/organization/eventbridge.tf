@@ -56,6 +56,7 @@ resource "aws_cloudwatch_event_target" "s3_dr" {
   rule      = aws_cloudwatch_event_rule.guardduty_findings_dr.name
   target_id = "SendToS3"
   arn       = module.guardduty_findings_bucket.s3_bucket_arn
+
   input_transformer {
     input_paths = {
       finding   = "$.detail"

@@ -10,8 +10,6 @@ variable "admin_role_name" {
 variable "aws_profile" {
   description = "AWS CLI profile to use for authentication"
   type        = string
-  default     = "InsPAC-Admin"
-
   validation {
     condition     = length(var.aws_profile) > 0
     error_message = "AWS profile must not be empty."

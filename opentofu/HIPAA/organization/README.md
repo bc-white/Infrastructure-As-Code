@@ -53,7 +53,7 @@
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_aws_profile"></a> [aws\_profile](#input\_aws\_profile) | AWS CLI profile to use for authentication | `string` | `"InsPAC-Admin"` | no |
+| <a name="input_aws_profile"></a> [aws\_profile](#input\_aws\_profile) | AWS CLI profile to use for authentication | `string` | n/a | yes |
 | <a name="input_dr_region"></a> [dr\_region](#input\_dr\_region) | Disaster recovery AWS region | `string` | `"us-west-2"` | no |
 | <a name="input_guardduty_finding_publishing_frequency"></a> [guardduty\_finding\_publishing\_frequency](#input\_guardduty\_finding\_publishing\_frequency) | Frequency of GuardDuty findings publishing (FIFTEEN\_MINUTES, ONE\_HOUR, SIX\_HOURS) | `string` | `"SIX_HOURS"` | no |
 | <a name="input_notification_emails"></a> [notification\_emails](#input\_notification\_emails) | List of email addresses to receive GuardDuty notifications | `list(string)` | `[]` | no |

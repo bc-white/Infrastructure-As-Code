@@ -1,3 +1,65 @@
+data "aws_iam_policy_document" "kms_org_key" {
+  statement {
+    sid    = "Enable IAM Admin Permissions"
+    effect = "Allow"
+    principals {
+      type = "AWS"
+      identifiers = [
+        "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/aws-reserved/sso.amazonaws.com/${var.primary_region}/${var.admin_role_name}"
+      ]
+    }
+    actions   = ["kms:*"]
+    resources = ["*"]
+  }
+  statement {
+    sid    = "Allow CloudTrail to encrypt logs"
+    effect = "Allow"
+    principals {
+      type        = "Service"
+      identifiers = ["cloudtrail.amazonaws.com"]
+    }
+    actions = [
+      "kms:GenerateDataKey*",
+      "kms:DecryptDataKey"
+    ]
+    resources = ["*"]
+    condition {
+      test     = "StringLike"
+      variable = "kms:EncryptionContext:aws:cloudtrail:arn"
+      values = [
+        "arn:aws:cloudtrail:*:${data.aws_caller_identity.current.account_id}:trail/*"
+      ]
+    }
+  }
+  statement {
+    sid    = "Allow CloudTrail to describe key"
+    effect = "Allow"
+    principals {
+      type        = "Service"
+      identifiers = ["cloudtrail.amazonaws.com"]
+    }
+    actions   = ["kms:DescribeKey"]
+    resources = ["*"]
+  }
+  statement {
+    sid    = "Allow services to use the key"
+    effect = "Allow"
+    principals {
+      type = "Service"
+      identifiers = [
+        "s3.amazonaws.com",
+        "sns.amazonaws.com",
+        "events.amazonaws.com"
+      ]
+    }
+    actions = [
+      "kms:Decrypt",
+      "kms:GenerateDataKey"
+    ]
+    resources = ["*"]
+  }
+}
+
 resource "aws_kms_key" "org_primary" {
   description             = "${var.org_name}-${var.project_name} organization primary multi-region key"
   deletion_window_in_days = 30

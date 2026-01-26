@@ -44,7 +44,7 @@
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_admin_role_name"></a> [admin\_role\_name](#input\_admin\_role\_name) | IAM Identity Center administrator role name | `string` | n/a | yes |
-| <a name="input_aws_profile"></a> [aws\_profile](#input\_aws\_profile) | AWS CLI profile to use for authentication | `string` | `"InsPAC-Admin"` | no |
+| <a name="input_aws_profile"></a> [aws\_profile](#input\_aws\_profile) | AWS CLI profile to use for authentication | `string` | n/a | yes |
 | <a name="input_dr_region"></a> [dr\_region](#input\_dr\_region) | Disaster recovery AWS region for multi-region resources | `string` | `"us-west-2"` | no |
 | <a name="input_enable_versioning"></a> [enable\_versioning](#input\_enable\_versioning) | Enable versioning on the state bucket | `bool` | `true` | no |
 | <a name="input_org_name"></a> [org\_name](#input\_org\_name) | Organization name, used for resource naming and tagging | `string` | n/a | yes |
