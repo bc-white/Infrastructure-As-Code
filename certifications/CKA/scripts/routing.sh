@@ -1,4 +1,4 @@
-#!/bin/env bash
+#!/usr/bin/env bash
 ###############################################################################
 # This script exercises service meshes, ingress controllers, and gateway apis
 # in the cluster. It is cobbled together from things I have learned from

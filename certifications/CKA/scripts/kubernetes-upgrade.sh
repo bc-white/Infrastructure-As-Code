@@ -1,4 +1,4 @@
-#!/bin/env bash
+#!/usr/bin/env bash
 ###############################################################################
 # This script upgrades Kubernetes components. It is cobbled together
 # from things I have learned from various sources including:

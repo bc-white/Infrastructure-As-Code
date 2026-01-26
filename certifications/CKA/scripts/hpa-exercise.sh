@@ -1,4 +1,4 @@
-#!/bin/env bash
+#!/usr/bin/env bash
 ###############################################################################
 # This script exercises Horizontal Pod Autoscaling (HPA) in the cluster.
 # It is cobbled together from things I have learned from various sources

@@ -1,4 +1,4 @@
-#!/bin/env bash
+#!/usr/bin/env bash
 ###############################################################################
 # This script sets up PVs, Secrets, and ConfigMaps within a kubernetes cluster..
 # It is cobbled together from things I have learned from various sources

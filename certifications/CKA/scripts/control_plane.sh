@@ -1,4 +1,4 @@
-#!/bin/env bash
+#!/usr/bin/env bash
 ###############################################################################
 # This script sets up the control plane node for a Kubernetes cluster. It
 # installs and configures the necessary components. It is cobbled together

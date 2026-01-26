@@ -1,4 +1,4 @@
-#!/bin/env bash
+#!/usr/bin/env bash
 ###############################################################################
 # This script exports required data from the kube config to test TLS
 # connections and to perform raw curls. It is cobbled together

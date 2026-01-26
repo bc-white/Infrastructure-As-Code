@@ -1,4 +1,4 @@
-#!/bin/env bash
+#!/usr/bin/env bash
 ###############################################################################
 # This script backs up the existing etcd data. It is cobbled together
 # from things I have learned from various sources including:

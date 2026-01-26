@@ -1,4 +1,4 @@
-#!/bin/env bash
+#!/usr/bin/env bash
 ###############################################################################
 # This script exercises labels, taints, tolerations, and scheduling.
 # It is cobbled together from things I have learned from various sources

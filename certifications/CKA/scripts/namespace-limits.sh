@@ -1,4 +1,4 @@
-#!/bin/env bash
+#!/usr/bin/env bash
 ###############################################################################
 # This script creates a namespace that is intended to have low resource
 # limitations put into place to demonstrate constraints. It is cobbled together

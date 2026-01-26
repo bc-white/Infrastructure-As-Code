@@ -1,4 +1,4 @@
-#!/bin/env bash
+#!/usr/bin/env bash
 ###############################################################################
 # This script runs jobs within a kubernetes cluster. It is cobbled together
 # from things I have learned from various sources including:

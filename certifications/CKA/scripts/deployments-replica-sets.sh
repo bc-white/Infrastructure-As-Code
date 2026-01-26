@@ -1,4 +1,4 @@
-#!/bin/env bash
+#!/usr/bin/env bash
 ###############################################################################
 # This script runs deployments and replica sets within a kubernetes cluster.
 # It is cobbled together from things I have learned from various sources
