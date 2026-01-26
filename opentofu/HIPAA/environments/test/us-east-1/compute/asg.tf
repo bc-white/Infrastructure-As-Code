@@ -19,6 +19,9 @@ resource "aws_launch_template" "main" {
     arn = aws_iam_instance_profile.ec2.arn
   }
   vpc_security_group_ids = [data.terraform_remote_state.network.outputs.ec2_security_group_id]
+  network_interfaces {
+    associate_public_ip_address = false
+  }
   metadata_options {
     http_endpoint               = "enabled"
     http_tokens                 = "required"

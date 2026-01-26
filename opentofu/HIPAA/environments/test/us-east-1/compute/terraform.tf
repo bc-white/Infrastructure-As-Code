@@ -19,6 +19,14 @@ locals {
 }
 
 data "aws_caller_identity" "current" {}
+data "terraform_remote_state" "bootstrap" {
+  backend = "s3"
+  config = {
+    bucket = "org-project-tofu-state-xxxxx"
+    key    = "bootstrap/terraform.tfstate"
+    region = "us-east-1"
+  }
+}
 data "terraform_remote_state" "network" {
   backend = "s3"
   config = {

@@ -1,5 +1,10 @@
 resource "aws_lb" "main" {
   name               = "${local.name_prefix}-alb"
+  access_logs {
+    bucket  = data.terraform_remote_state.bootstrap.outputs.s3_access_logs_bucket_name
+    enabled = true
+    prefix  = "alb-test"
+  }
   internal           = false
   load_balancer_type = "application"
   security_groups    = [data.terraform_remote_state.network.outputs.alb_security_group_id]
