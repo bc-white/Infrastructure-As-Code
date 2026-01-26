@@ -1,10 +1,3 @@
-# TODO: REMOVE - SonarQube test
-# This is intentionally insecure to test SonarQube scanning
-variable "test_aws_key" {
-  default = "AKIAIOSFODNN7EXAMPLE"
-  sensitive = true
-}
-
 resource "random_id" "bucket_suffix" {
   byte_length = 4
 }
