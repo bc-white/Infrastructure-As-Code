@@ -204,3 +204,9 @@ coverage.xml
 
 # Snyk Security Extension - AI Rules (auto-generated)
 .github/instructions/snyk_rules.instructions.md
+
+# Pem files
+**/*.pem
+**/*.key
+**/*.crt
+**/*.cer
