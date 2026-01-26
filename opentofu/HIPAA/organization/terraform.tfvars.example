@@ -1,0 +1,9 @@
+# Copy this file to terraform.tfvars and update with your values
+
+org_name                               = "your-org-name"
+project_name                           = "your-project-name"
+aws_profile                            = "your-aws-profile"
+primary_region                         = "us-east-1"
+dr_region                              = "us-west-2"
+notification_emails                    = ["security-team@example.com"]
+guardduty_finding_publishing_frequency = "SIX_HOURS"
