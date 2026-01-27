@@ -5,6 +5,11 @@ resource "aws_lb" "main" {
   subnets            = data.terraform_remote_state.network.outputs.public_subnet_ids
   enable_deletion_protection = false
   enable_cross_zone_load_balancing = true
+  access_logs {
+    bucket  = data.terraform_remote_state.data.outputs.uploads_bucket_name
+    prefix = "nlb-logs/"
+    enabled = false
+  }
   tags = {
     Name = "${local.name_prefix}-nlb"
   }
