@@ -16,11 +16,11 @@ resource "aws_launch_template" "main" {
   image_id      = data.aws_ami.ubuntu.id
   instance_type = var.instance_type
   iam_instance_profile {
-    arn = aws_iam_instance_profile.ec2.arn
+    arn = data.terraform_remote_state.data.outputs.ec2_instance_profile_arn
   }
-  vpc_security_group_ids = [data.terraform_remote_state.network.outputs.ec2_security_group_id]
   network_interfaces {
     associate_public_ip_address = false
+    security_groups             = [data.terraform_remote_state.network.outputs.ec2_security_group_id]
   }
   metadata_options {
     http_endpoint               = "enabled"

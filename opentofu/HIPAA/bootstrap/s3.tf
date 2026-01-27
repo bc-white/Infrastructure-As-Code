@@ -140,8 +140,6 @@ module "s3_access_logs" {
     }
   }
   attach_deny_insecure_transport_policy = true
-  attach_elb_log_delivery_policy        = false
-  attach_lb_log_delivery_policy         = false
   attach_access_log_delivery_policy     = true
   control_object_ownership = true
   object_ownership         = "BucketOwnerPreferred"

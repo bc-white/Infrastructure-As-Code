@@ -1,10 +1,10 @@
-output "alb_arn" {
-  description = "ALB ARN"
+output "lb_arn" {
+  description = "Load balancer ARN"
   value       = aws_lb.main.arn
 }
 
-output "alb_dns_name" {
-  description = "ALB DNS name"
+output "lb_dns_name" {
+  description = "Load balancer DNS name"
   value       = aws_lb.main.dns_name
 }
 
@@ -21,26 +21,6 @@ output "application_log_group_name" {
 output "asg_name" {
   description = "Auto Scaling Group name"
   value       = aws_autoscaling_group.main.name
-}
-
-output "ec2_instance_profile_arn" {
-  description = "EC2 instance profile ARN"
-  value       = aws_iam_instance_profile.ec2.arn
-}
-
-output "ec2_instance_profile_name" {
-  description = "EC2 instance profile name"
-  value       = aws_iam_instance_profile.ec2.name
-}
-
-output "ec2_role_arn" {
-  description = "EC2 IAM role ARN"
-  value       = aws_iam_role.ec2_instance.arn
-}
-
-output "ec2_role_name" {
-  description = "EC2 IAM role name"
-  value       = aws_iam_role.ec2_instance.name
 }
 
 output "system_log_group_arn" {

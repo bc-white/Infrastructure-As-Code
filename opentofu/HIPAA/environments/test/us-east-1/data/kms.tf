@@ -1,7 +1,3 @@
-locals {
-  name_prefix = "${var.org_name}-${var.project_name}-${var.environment}"
-}
-
 data "aws_iam_policy_document" "kms_key_policy" {
   statement {
     sid = "Enable IAM policies for grants and data access"
@@ -27,7 +23,7 @@ data "aws_iam_policy_document" "kms_key_policy" {
     resources = ["*"]
     principals {
       type        = "AWS"
-      identifiers = ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/aws-reserved/sso.amazonaws.com/${var.region}/${var.admin_role_name}"]
+      identifiers = ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/aws-reserved/sso.amazonaws.com/${var.admin_role_name}"]
     }
   }
   statement {
@@ -40,6 +36,26 @@ data "aws_iam_policy_document" "kms_key_policy" {
     principals {
       type        = "Service"
       identifiers = ["s3.amazonaws.com"]
+    }
+  }
+  statement {
+    sid = "Allow CloudWatch Logs to use the key"
+    actions = [
+      "kms:Decrypt",
+      "kms:DescribeKey",
+      "kms:Encrypt",
+      "kms:GenerateDataKey*",
+      "kms:ReEncrypt*"
+    ]
+    resources = ["*"]
+    principals {
+      type        = "Service"
+      identifiers = ["logs.${var.region}.amazonaws.com"]
+    }
+    condition {
+      test     = "ArnLike"
+      variable = "kms:EncryptionContext:aws:logs:arn"
+      values   = ["arn:aws:logs:${var.region}:${data.aws_caller_identity.current.account_id}:*"]
     }
   }
 }

@@ -1,3 +1,55 @@
+data "aws_iam_policy_document" "uploads_bucket_policy" {
+  statement {
+    sid    = "DenyInsecureTransport"
+    effect = "Deny"
+    principals {
+      type        = "*"
+      identifiers = ["*"]
+    }
+    actions = ["s3:*"]
+    resources = [
+      "arn:aws:s3:::${local.name_prefix}-uploads",
+      "arn:aws:s3:::${local.name_prefix}-uploads/*"
+    ]
+    condition {
+      test     = "Bool"
+      variable = "aws:SecureTransport"
+      values   = ["false"]
+    }
+  }
+  statement {
+    sid    = "AllowEC2InstanceRole"
+    effect = "Allow"
+    principals {
+      type        = "AWS"
+      identifiers = [aws_iam_role.ec2_instance.arn]
+    }
+    actions = [
+      "s3:GetObject",
+      "s3:PutObject",
+      "s3:DeleteObject",
+      "s3:ListBucket"
+    ]
+    resources = [
+      "arn:aws:s3:::${local.name_prefix}-uploads",
+      "arn:aws:s3:::${local.name_prefix}-uploads/*"
+    ]
+  }
+  statement {
+    sid    = "AllowAdminFullAccess"
+    effect = "Allow"
+    principals {
+      type        = "AWS"
+      identifiers = ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/aws-reserved/sso.amazonaws.com/${var.admin_role_name}"]
+    }
+    actions   = ["s3:*"]
+    resources = [
+      "arn:aws:s3:::${local.name_prefix}-uploads",
+      "arn:aws:s3:::${local.name_prefix}-uploads/*"
+    ]
+  }
+}
+
 module "uploads_bucket" {
   source  = "terraform-aws-modules/s3-bucket/aws"
   version = "~> 5.0"
@@ -14,7 +66,8 @@ module "uploads_bucket" {
       }
     }
   }
-  attach_deny_insecure_transport_policy = true
+  attach_policy = true
+  policy        = data.aws_iam_policy_document.uploads_bucket_policy.json
   block_public_acls       = true
   block_public_policy     = true
   ignore_public_acls      = true

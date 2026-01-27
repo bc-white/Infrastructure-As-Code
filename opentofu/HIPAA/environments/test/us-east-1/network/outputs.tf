@@ -1,6 +1,6 @@
-output "alb_security_group_id" {
-  description = "ALB security group ID"
-  value       = aws_security_group.alb.id
+output "lb_security_group_id" {
+  description = "Load balancer security group ID"
+  value       = aws_security_group.lb.id
 }
 
 output "ec2_security_group_id" {

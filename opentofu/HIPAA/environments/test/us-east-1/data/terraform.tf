@@ -7,8 +7,9 @@ terraform {
     }
   }
   backend "s3" {
-    bucket  = "org-project-tofu-state-xxxxx"
+    bucket  = "inspac-mocksurvey365-tofu-state-03e07a7f"
     key     = "environments/test/us-east-1/data/terraform.tfstate"
+    profile = "InsPAC-Admin"
     region  = "us-east-1"
     encrypt = true
   }
@@ -22,8 +23,9 @@ data "aws_caller_identity" "current" {}
 data "terraform_remote_state" "bootstrap" {
   backend = "s3"
   config = {
-    bucket = "org-project-tofu-state-xxxxx"
-    key    = "bootstrap/terraform.tfstate"
-    region = "us-east-1"
+    bucket  = "inspac-mocksurvey365-tofu-state-03e07a7f"
+    key     = "bootstrap/terraform.tfstate"
+    profile = "InsPAC-Admin"
+    region  = "us-east-1"
   }
 }

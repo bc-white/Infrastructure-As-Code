@@ -7,7 +7,6 @@ data "aws_iam_policy_document" "ec2_assume_role" {
     }
   }
 }
-
 resource "aws_iam_role" "ec2_instance" {
   name_prefix        = "${local.name_prefix}-ec2-"
   assume_role_policy = data.aws_iam_policy_document.ec2_assume_role.json
@@ -15,7 +14,6 @@ resource "aws_iam_role" "ec2_instance" {
     Name = "${local.name_prefix}-ec2-role"
   }
 }
-
 data "aws_iam_policy_document" "ec2_permissions" {
   statement {
     sid = "S3Access"
@@ -26,8 +24,8 @@ data "aws_iam_policy_document" "ec2_permissions" {
       "s3:ListBucket"
     ]
     resources = [
-      data.terraform_remote_state.data.outputs.uploads_bucket_arn,
-      "${data.terraform_remote_state.data.outputs.uploads_bucket_arn}/*"
+      module.uploads_bucket.s3_bucket_arn,
+      "${module.uploads_bucket.s3_bucket_arn}/*"
     ]
   }
   statement {
@@ -58,20 +56,17 @@ data "aws_iam_policy_document" "ec2_permissions" {
       "kms:GenerateDataKey",
       "kms:DescribeKey"
     ]
-    resources = [data.terraform_remote_state.data.outputs.customer_kms_key_arn]
+    resources = [aws_kms_key.customer_data.arn]
   }
 }
-
 resource "aws_iam_policy" "ec2_permissions" {
   name_prefix = "${local.name_prefix}-ec2-"
   policy      = data.aws_iam_policy_document.ec2_permissions.json
 }
-
 resource "aws_iam_role_policy_attachment" "ec2_permissions" {
   role       = aws_iam_role.ec2_instance.name
   policy_arn = aws_iam_policy.ec2_permissions.arn
 }
-
 resource "aws_iam_instance_profile" "ec2" {
   name_prefix = "${local.name_prefix}-ec2-"
   role        = aws_iam_role.ec2_instance.name

@@ -7,39 +7,44 @@ terraform {
     }
   }
   backend "s3" {
-    bucket  = "org-project-tofu-state-xxxxx"
+    bucket  = "inspac-mocksurvey365-tofu-state-03e07a7f"
     key     = "environments/test/us-east-1/compute/terraform.tfstate"
+    profile = "InsPAC-Admin"
     region  = "us-east-1"
     encrypt = true
   }
 }
 
 locals {
-  name_prefix = "${var.org_name}-${var.project_name}-${var.environment}"
+  name_prefix    = "${var.org_name}-${var.project_name}-${var.environment}"
+  tg_name_prefix = "${substr(var.org_name, 0, 1)}${substr(var.project_name, 0, 1)}${substr(var.environment, 0, 1)}-"
 }
 
 data "aws_caller_identity" "current" {}
 data "terraform_remote_state" "bootstrap" {
   backend = "s3"
   config = {
-    bucket = "org-project-tofu-state-xxxxx"
-    key    = "bootstrap/terraform.tfstate"
-    region = "us-east-1"
+    bucket  = "inspac-mocksurvey365-tofu-state-03e07a7f"
+    key     = "bootstrap/terraform.tfstate"
+    profile = "InsPAC-Admin"
+    region  = "us-east-1"
   }
 }
 data "terraform_remote_state" "network" {
   backend = "s3"
   config = {
-    bucket = "org-project-tofu-state-xxxxx"
+    bucket = "inspac-mocksurvey365-tofu-state-03e07a7f"
     key    = "environments/test/us-east-1/network/terraform.tfstate"
+    profile = "InsPAC-Admin"
     region = "us-east-1"
   }
 }
 data "terraform_remote_state" "data" {
   backend = "s3"
   config = {
-    bucket = "org-project-tofu-state-xxxxx"
+    bucket = "inspac-mocksurvey365-tofu-state-03e07a7f"
     key    = "environments/test/us-east-1/data/terraform.tfstate"
+    profile = "InsPAC-Admin"
     region = "us-east-1"
   }
 }
