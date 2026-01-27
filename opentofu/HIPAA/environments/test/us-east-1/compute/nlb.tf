@@ -8,7 +8,7 @@ resource "aws_lb" "main" {
   access_logs {
     bucket  = data.terraform_remote_state.data.outputs.uploads_bucket_name
     prefix = "nlb-logs/"
-    enabled = false
+    enabled = false #NOSONAR test environment with no log retention
   }
   tags = {
     Name = "${local.name_prefix}-nlb"
