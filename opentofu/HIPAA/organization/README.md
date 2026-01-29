@@ -42,6 +42,7 @@
 | [aws_guardduty_organization_configuration_feature.s3_primary](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/guardduty_organization_configuration_feature) | resource |
 | [aws_guardduty_publishing_destination.dr](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/guardduty_publishing_destination) | resource |
 | [aws_guardduty_publishing_destination.primary](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/guardduty_publishing_destination) | resource |
+| [aws_route53_zone.primary](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route53_zone) | resource |
 | [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
 | [aws_organizations_organization.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/organizations_organization) | data source |
 | [terraform_remote_state.bootstrap](https://registry.terraform.io/providers/hashicorp/terraform/latest/docs/data-sources/remote_state) | data source |
@@ -51,6 +52,7 @@
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_aws_profile"></a> [aws\_profile](#input\_aws\_profile) | AWS CLI profile to use for authentication | `string` | n/a | yes |
+| <a name="input_domain_name"></a> [domain\_name](#input\_domain\_name) | Primary domain name for the organization | `string` | n/a | yes |
 | <a name="input_dr_region"></a> [dr\_region](#input\_dr\_region) | Disaster recovery AWS region | `string` | `"us-west-2"` | no |
 | <a name="input_guardduty_finding_publishing_frequency"></a> [guardduty\_finding\_publishing\_frequency](#input\_guardduty\_finding\_publishing\_frequency) | Frequency of GuardDuty findings publishing (FIFTEEN\_MINUTES, ONE\_HOUR, SIX\_HOURS) | `string` | `"SIX_HOURS"` | no |
 | <a name="input_notification_emails"></a> [notification\_emails](#input\_notification\_emails) | List of email addresses to receive GuardDuty notifications | `list(string)` | `[]` | no |
@@ -72,4 +74,6 @@
 | <a name="output_findings_bucket_name"></a> [findings\_bucket\_name](#output\_findings\_bucket\_name) | S3 bucket name for GuardDuty findings |
 | <a name="output_guardduty_detector_id_dr"></a> [guardduty\_detector\_id\_dr](#output\_guardduty\_detector\_id\_dr) | GuardDuty detector ID in DR region |
 | <a name="output_guardduty_detector_id_primary"></a> [guardduty\_detector\_id\_primary](#output\_guardduty\_detector\_id\_primary) | GuardDuty detector ID in primary region |
+| <a name="output_hosted_zone_id"></a> [hosted\_zone\_id](#output\_hosted\_zone\_id) | Route 53 hosted zone ID |
+| <a name="output_hosted_zone_name_servers"></a> [hosted\_zone\_name\_servers](#output\_hosted\_zone\_name\_servers) | Route 53 hosted zone name servers |
 | <a name="output_sns_topic_arn"></a> [sns\_topic\_arn](#output\_sns\_topic\_arn) | SNS topic ARN for GuardDuty notifications |

@@ -48,6 +48,16 @@ output "guardduty_detector_id_primary" {
   value       = aws_guardduty_detector.primary.id
 }
 
+output "hosted_zone_id" {
+  description = "Route 53 hosted zone ID"
+  value       = aws_route53_zone.primary.zone_id
+}
+
+output "hosted_zone_name_servers" {
+  description = "Route 53 hosted zone name servers"
+  value       = aws_route53_zone.primary.name_servers
+}
+
 output "sns_topic_arn" {
   description = "SNS topic ARN for GuardDuty notifications"
   value       = module.guardduty_notifications.topic_arn
