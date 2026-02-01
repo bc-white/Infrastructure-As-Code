@@ -20,3 +20,12 @@ module "vpc" {
     Name = "${local.name_prefix}-vpc"
   }
 }
+
+resource "aws_vpc_endpoint" "s3_endpoint" {
+    vpc_id          = module.vpc.vpc_id
+    service_name    = "com.amazonaws.${var.region}.s3"
+    route_table_ids = flatten([ module.vpc.private_route_table_ids, module.vpc.public_route_table_ids ])
+  tags = {
+    Name = "${local.name_prefix}-s3-endpoint"
+  }
+}

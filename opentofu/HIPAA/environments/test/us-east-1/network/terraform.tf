@@ -9,7 +9,7 @@ terraform {
   backend "s3" {
     bucket  = "inspac-mocksurvey365-tofu-state-03e07a7f"
     key     = "environments/test/us-east-1/network/terraform.tfstate"
-    profile = "InsPAC-Admin"
+    profile = "Admin"
     region  = "us-east-1"
     encrypt = true
   }
