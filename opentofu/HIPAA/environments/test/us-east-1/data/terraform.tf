@@ -25,7 +25,7 @@ data "terraform_remote_state" "bootstrap" {
   config = {
     bucket  = "inspac-mocksurvey365-tofu-state-03e07a7f"
     key     = "bootstrap/terraform.tfstate"
-    profile = "Admin"
+    profile = var.aws_profile
     region  = "us-east-1"
   }
 }

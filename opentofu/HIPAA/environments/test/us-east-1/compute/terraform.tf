@@ -26,7 +26,7 @@ data "terraform_remote_state" "bootstrap" {
   config = {
     bucket  = "inspac-mocksurvey365-tofu-state-03e07a7f"
     key     = "bootstrap/terraform.tfstate"
-    profile = "Admin"
+    profile = var.aws_profile
     region  = "us-east-1"
   }
 }
@@ -35,7 +35,7 @@ data "terraform_remote_state" "network" {
   config = {
     bucket = "inspac-mocksurvey365-tofu-state-03e07a7f"
     key    = "environments/test/us-east-1/network/terraform.tfstate"
-    profile = "Admin"
+    profile = var.aws_profile
     region = "us-east-1"
   }
 }
@@ -44,7 +44,7 @@ data "terraform_remote_state" "data" {
   config = {
     bucket = "inspac-mocksurvey365-tofu-state-03e07a7f"
     key    = "environments/test/us-east-1/data/terraform.tfstate"
-    profile = "Admin"
+    profile = var.aws_profile
     region = "us-east-1"
   }
 }
