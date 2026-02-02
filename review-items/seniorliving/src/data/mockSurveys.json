@@ -1,0 +1,59 @@
+{
+  "surveys": [
+    {
+      "id": "survey-1",
+      "title": "Standard Assisted Living Survey - Florida",
+      "description": "Comprehensive survey for Florida ALF compliance",
+      "type": "Standard",
+      "state": "Florida",
+      "status": "Draft",
+      "facilityId": "facility-1",
+      "createdBy": "user-1",
+      "createdAt": "2024-01-15T10:00:00Z",
+      "updatedAt": "2024-01-15T10:00:00Z",
+      "lastModifiedBy": "user-1",
+      "regulationReferences": ["FAC 58A-5"],
+      "sections": [
+        {
+          "id": "section-1",
+          "surveyId": "survey-1",
+          "title": "Resident Care Services",
+          "description": "Assessment of resident care services and quality of care",
+          "order": 1,
+          "regulationReference": "FAC 58A-5.018",
+          "parentSectionId": null,
+          "questions": [
+            {
+              "id": "question-1",
+              "sectionId": "section-1",
+              "text": "Are all residents assessed upon admission?",
+              "type": "radio",
+              "required": true,
+              "helpText": "Review resident admission records",
+              "regulationReference": "FAC 58A-5.0181",
+              "order": 1,
+              "validation": {},
+              "options": [
+                {
+                  "id": "opt-1",
+                  "questionId": "question-1",
+                  "label": "Yes",
+                  "value": "yes",
+                  "order": 1
+                },
+                {
+                  "id": "opt-2",
+                  "questionId": "question-1",
+                  "label": "No",
+                  "value": "no",
+                  "order": 2
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+

@@ -1,0 +1,45 @@
+{
+  "users": [
+    {
+      "id": "user-1",
+      "email": "admin@test.com",
+      "password": "password123",
+      "name": "System Admin",
+      "role": "system_admin",
+      "facilityId": "facility-1",
+      "onboardingCompleted": true,
+      "createdAt": "2024-01-15T10:00:00Z"
+    },
+    {
+      "id": "user-2",
+      "email": "don@test.com",
+      "password": "password123",
+      "name": "Jane Doe",
+      "role": "don",
+      "facilityId": "facility-1",
+      "onboardingCompleted": true,
+      "createdAt": "2024-01-16T09:00:00Z"
+    },
+    {
+      "id": "user-3",
+      "email": "newuser@test.com",
+      "password": "password123",
+      "name": "New User",
+      "role": null,
+      "facilityId": null,
+      "onboardingCompleted": true,
+      "createdAt": "2024-01-20T12:00:00Z"
+    },
+    {
+      "id": "user-4",
+      "email": "staff@theinspac.com",
+      "password": "ghana2025",
+      "name": "Survey Admin",
+      "role": "survey_admin",
+      "facilityId": "facility-1",
+      "onboardingCompleted": true,
+      "createdAt": "2024-01-20T12:00:00Z"
+    }
+  ]
+}
+

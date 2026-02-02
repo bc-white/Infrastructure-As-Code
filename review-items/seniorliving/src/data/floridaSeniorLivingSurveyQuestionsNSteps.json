@@ -1,0 +1,634 @@
+{
+  "surveyMetadata": {
+    "name": "Senior Living Survey",
+    "version": "1.0",
+    "description": "Comprehensive survey for assisted living, nursing homes, memory care, and independent living facilities",
+    "applicableStates": ["Florida", "All"],
+    "lastUpdated": "2025-01-01"
+  },
+  "preSurveySteps": {
+    "title": "Pre-Survey Steps (Intake Process)",
+    "steps": [
+      {
+        "stepNumber": 1,
+        "title": "Identify the Resident",
+        "fields": [
+          {
+            "id": "resident_name",
+            "label": "Resident Name",
+            "type": "text",
+            "required": true
+          },
+          {
+            "id": "room_number",
+            "label": "Room / Unit Number",
+            "type": "text",
+            "required": true
+          },
+          {
+            "id": "assessment_date",
+            "label": "Date of Assessment",
+            "type": "date",
+            "required": true
+          },
+          {
+            "id": "assessor_name",
+            "label": "Assessor's Name",
+            "type": "text",
+            "required": true
+          },
+          {
+            "id": "assessor_role",
+            "label": "Assessor's Role",
+            "type": "text",
+            "required": true
+          }
+        ]
+      },
+      {
+        "stepNumber": 2,
+        "title": "Determine Survey Type",
+        "fields": [
+          {
+            "id": "survey_type",
+            "label": "Survey Type",
+            "type": "select",
+            "required": true,
+            "options": [
+              "Admission / Move-In",
+              "Routine Weekly / Monthly Review",
+              "Care Plan Review",
+              "Incident-related Survey",
+              "Medication Review",
+              "Wellness Check",
+              "Complaint/Concern Survey"
+            ]
+          }
+        ]
+      },
+      {
+        "stepNumber": 3,
+        "title": "Check Required Data Sources",
+        "fields": [
+          {
+            "id": "last_care_plan",
+            "label": "Last Care Plan",
+            "type": "checkbox",
+            "required": false
+          },
+          {
+            "id": "vitals_history",
+            "label": "Vitals History",
+            "type": "checkbox",
+            "required": false
+          },
+          {
+            "id": "medication_mar",
+            "label": "Medication MAR",
+            "type": "checkbox",
+            "required": false
+          },
+          {
+            "id": "previous_survey_notes",
+            "label": "Notes from Previous Surveys",
+            "type": "checkbox",
+            "required": false
+          },
+          {
+            "id": "nurse_physician_updates",
+            "label": "Nurse or Physician Updates",
+            "type": "checkbox",
+            "required": false
+          }
+        ]
+      }
+    ]
+  },
+  "coreQuestionCategories": [
+    {
+      "categoryId": "A",
+      "categoryName": "Physical Health & Wellness",
+      "description": "Assessment of resident's physical health status",
+      "questions": [
+        {
+          "questionId": "A1",
+          "questionText": "How would you rate your current physical health?",
+          "type": "rating",
+          "options": ["Excellent", "Good", "Fair", "Poor"],
+          "required": true
+        },
+        {
+          "questionId": "A2",
+          "questionText": "Any pain today?",
+          "type": "yesno",
+          "required": true
+        },
+        {
+          "questionId": "A3",
+          "questionText": "Pain level (0–10)?",
+          "type": "scale",
+          "min": 0,
+          "max": 10,
+          "required": false,
+          "conditional": {
+            "dependsOn": "A2",
+            "showIf": "yes"
+          }
+        },
+        {
+          "questionId": "A4",
+          "questionText": "Any new symptoms (swelling, dizziness, weakness)?",
+          "type": "text",
+          "required": false
+        },
+        {
+          "questionId": "A5",
+          "questionText": "Mobility status",
+          "type": "select",
+          "options": ["Walking independently", "Walking with assistance", "Wheelchair", "Bedridden"],
+          "required": true
+        },
+        {
+          "questionId": "A6",
+          "questionText": "Any recent falls?",
+          "type": "yesno",
+          "required": true
+        },
+        {
+          "questionId": "A7",
+          "questionText": "Sleep quality?",
+          "type": "rating",
+          "options": ["Excellent", "Good", "Fair", "Poor"],
+          "required": false
+        }
+      ]
+    },
+    {
+      "categoryId": "B",
+      "categoryName": "Daily Living Activities (ADLs)",
+      "description": "Activities of Daily Living assessment",
+      "questions": [
+        {
+          "questionId": "B1",
+          "questionText": "Do you need help with bathing, dressing, grooming, or toileting?",
+          "type": "yesno",
+          "required": true
+        },
+        {
+          "questionId": "B2",
+          "questionText": "Any changes in eating or appetite?",
+          "type": "text",
+          "required": false
+        },
+        {
+          "questionId": "B3",
+          "questionText": "Are you able to move independently in your room?",
+          "type": "yesno",
+          "required": true
+        },
+        {
+          "questionId": "B4",
+          "questionText": "Do you need assistance with transfers?",
+          "type": "yesno",
+          "required": true
+        }
+      ]
+    },
+    {
+      "categoryId": "C",
+      "categoryName": "Medication & Treatment",
+      "description": "Medication compliance and treatment adherence",
+      "questions": [
+        {
+          "questionId": "C1",
+          "questionText": "Have you taken all prescribed medications today?",
+          "type": "yesno",
+          "required": true
+        },
+        {
+          "questionId": "C2",
+          "questionText": "Any missed doses?",
+          "type": "yesno",
+          "required": false,
+          "conditional": {
+            "dependsOn": "C1",
+            "showIf": "no"
+          }
+        },
+        {
+          "questionId": "C3",
+          "questionText": "Any side effects?",
+          "type": "text",
+          "required": false
+        },
+        {
+          "questionId": "C4",
+          "questionText": "Are treatments (wound care, therapy, injections) received as scheduled?",
+          "type": "yesno",
+          "required": true
+        }
+      ]
+    },
+    {
+      "categoryId": "D",
+      "categoryName": "Safety & Environment",
+      "description": "Safety assessment and environmental factors",
+      "questions": [
+        {
+          "questionId": "D1",
+          "questionText": "Do you feel safe in your room and common areas?",
+          "type": "yesno",
+          "required": true
+        },
+        {
+          "questionId": "D2",
+          "questionText": "Any hazards noticed (wet floor, broken equipment, lighting issues)?",
+          "type": "text",
+          "required": false
+        },
+        {
+          "questionId": "D3",
+          "questionText": "Is your emergency call button working?",
+          "type": "yesno",
+          "required": true
+        },
+        {
+          "questionId": "D4",
+          "questionText": "Is your room temperature comfortable?",
+          "type": "yesno",
+          "required": false
+        }
+      ]
+    },
+    {
+      "categoryId": "E",
+      "categoryName": "Nutrition & Hydration",
+      "description": "Nutritional intake and hydration status",
+      "questions": [
+        {
+          "questionId": "E1",
+          "questionText": "Did you eat your meals today?",
+          "type": "yesno",
+          "required": true
+        },
+        {
+          "questionId": "E2",
+          "questionText": "Meal satisfaction (1–5)",
+          "type": "scale",
+          "min": 1,
+          "max": 5,
+          "required": false,
+          "conditional": {
+            "dependsOn": "E1",
+            "showIf": "yes"
+          }
+        },
+        {
+          "questionId": "E3",
+          "questionText": "Do you feel well-hydrated?",
+          "type": "yesno",
+          "required": true
+        },
+        {
+          "questionId": "E4",
+          "questionText": "Any dietary concerns or special requests?",
+          "type": "text",
+          "required": false
+        }
+      ]
+    },
+    {
+      "categoryId": "F",
+      "categoryName": "Mental & Emotional Well-Being",
+      "description": "Mental health and emotional status assessment",
+      "questions": [
+        {
+          "questionId": "F1",
+          "questionText": "Mood today",
+          "type": "select",
+          "options": ["Happy", "Calm", "Anxious", "Sad", "Irritated"],
+          "required": true
+        },
+        {
+          "questionId": "F2",
+          "questionText": "Any feelings of loneliness?",
+          "type": "yesno",
+          "required": false
+        },
+        {
+          "questionId": "F3",
+          "questionText": "Any behavior changes noticed?",
+          "type": "text",
+          "required": false
+        },
+        {
+          "questionId": "F4",
+          "questionText": "Interest in social activities?",
+          "type": "yesno",
+          "required": false
+        }
+      ]
+    },
+    {
+      "categoryId": "G",
+      "categoryName": "Social & Engagement Activities",
+      "description": "Social participation and activity engagement",
+      "questions": [
+        {
+          "questionId": "G1",
+          "questionText": "Did you participate in activities today?",
+          "type": "yesno",
+          "required": false
+        },
+        {
+          "questionId": "G2",
+          "questionText": "Would you like more social or recreational programs?",
+          "type": "yesno",
+          "required": false
+        },
+        {
+          "questionId": "G3",
+          "questionText": "Are staff encouraging participation?",
+          "type": "yesno",
+          "required": false
+        }
+      ]
+    },
+    {
+      "categoryId": "H",
+      "categoryName": "Cleanliness & Living Conditions",
+      "description": "Resident satisfaction with cleanliness and living environment",
+      "questions": [
+        {
+          "questionId": "H1",
+          "questionText": "Is your room clean and organized?",
+          "type": "yesno",
+          "required": true
+        },
+        {
+          "questionId": "H2",
+          "questionText": "Laundry and linens changed as expected?",
+          "type": "yesno",
+          "required": false
+        },
+        {
+          "questionId": "H3",
+          "questionText": "Bathroom cleanliness satisfaction?",
+          "type": "rating",
+          "options": ["Excellent", "Good", "Fair", "Poor"],
+          "required": false
+        }
+      ]
+    },
+    {
+      "categoryId": "I",
+      "categoryName": "Staff Interaction & Service Quality",
+      "description": "Assessment of staff responsiveness and service quality",
+      "questions": [
+        {
+          "questionId": "I1",
+          "questionText": "Are staff responding promptly to calls?",
+          "type": "yesno",
+          "required": true
+        },
+        {
+          "questionId": "I2",
+          "questionText": "Are staff polite and respectful?",
+          "type": "yesno",
+          "required": true
+        },
+        {
+          "questionId": "I3",
+          "questionText": "Any concerns about interaction with caregivers?",
+          "type": "text",
+          "required": false
+        }
+      ]
+    },
+    {
+      "categoryId": "J",
+      "categoryName": "Family & Communication",
+      "description": "Family contact and communication preferences",
+      "questions": [
+        {
+          "questionId": "J1",
+          "questionText": "Have you had contact with family recently?",
+          "type": "yesno",
+          "required": false
+        },
+        {
+          "questionId": "J2",
+          "questionText": "Do you want help calling or contacting family?",
+          "type": "yesno",
+          "required": false
+        },
+        {
+          "questionId": "J3",
+          "questionText": "Any concerns relatives have raised?",
+          "type": "text",
+          "required": false
+        }
+      ]
+    }
+  ],
+  "incidentRelatedQuestions": {
+    "title": "Incident-Related Survey Questions",
+    "description": "Use when triggered by: fall, medication error, altercation, sudden illness, complaint",
+    "triggerEvents": [
+      "Fall",
+      "Medication Error",
+      "Altercation",
+      "Sudden Illness",
+      "Complaint"
+    ],
+    "questions": [
+      {
+        "questionId": "INC1",
+        "questionText": "What happened? (Resident/Staff narrative)",
+        "type": "textarea",
+        "required": true
+      },
+      {
+        "questionId": "INC2",
+        "questionText": "Location of incident",
+        "type": "text",
+        "required": true
+      },
+      {
+        "questionId": "INC3",
+        "questionText": "Date & time",
+        "type": "datetime",
+        "required": true
+      },
+      {
+        "questionId": "INC4",
+        "questionText": "Who witnessed it?",
+        "type": "text",
+        "required": false
+      },
+      {
+        "questionId": "INC5",
+        "questionText": "Contributing factors (wet floor, clutter, behavior, health change)",
+        "type": "textarea",
+        "required": false
+      },
+      {
+        "questionId": "INC6",
+        "questionText": "Injury details",
+        "type": "textarea",
+        "required": false
+      },
+      {
+        "questionId": "INC7",
+        "questionText": "Immediate actions taken",
+        "type": "textarea",
+        "required": true
+      },
+      {
+        "questionId": "INC8",
+        "questionText": "Notifications (family, nurse, physician)",
+        "type": "textarea",
+        "required": true
+      },
+      {
+        "questionId": "INC9",
+        "questionText": "Preventive recommendations",
+        "type": "textarea",
+        "required": false
+      }
+    ]
+  },
+  "endOfSurveyQuestions": {
+    "title": "End-of-Survey Questions",
+    "questions": [
+      {
+        "questionId": "END1",
+        "questionText": "Is there anything else you want us to know today?",
+        "type": "textarea",
+        "required": false
+      },
+      {
+        "questionId": "END2",
+        "questionText": "Follow-up required?",
+        "type": "yesno",
+        "required": true
+      },
+      {
+        "questionId": "END3",
+        "questionText": "Priority status",
+        "type": "select",
+        "options": ["Low", "Mid", "High", "Critical"],
+        "required": true
+      },
+      {
+        "questionId": "END4",
+        "questionText": "Next review date",
+        "type": "date",
+        "required": false,
+        "conditional": {
+          "dependsOn": "END2",
+          "showIf": "yes"
+        }
+      },
+      {
+        "questionId": "END5",
+        "questionText": "Staff signature & timestamp",
+        "type": "signature",
+        "required": true
+      }
+    ]
+  },
+  "workflowSteps": {
+    "title": "Survey Workflow Steps (Process Flow)",
+    "steps": [
+      {
+        "stepNumber": 1,
+        "stepName": "Start Survey",
+        "actions": [
+          "Choose resident",
+          "Select survey type",
+          "Load previous data"
+        ]
+      },
+      {
+        "stepNumber": 2,
+        "stepName": "Conduct Assessment",
+        "actions": [
+          "Go through all categories",
+          "Record responses & vitals",
+          "Add notes, attachments, or photos (if needed)"
+        ]
+      },
+      {
+        "stepNumber": 3,
+        "stepName": "Identify Risks",
+        "actions": [
+          "Fall risk",
+          "Skin breakdown risk",
+          "Medication issues",
+          "Emotional distress",
+          "Hydration risk"
+        ]
+      },
+      {
+        "stepNumber": 4,
+        "stepName": "Generate Summary",
+        "actions": [
+          "Auto-summarize findings",
+          "Alert high-priority issues",
+          "Create tasks or follow-ups"
+        ]
+      },
+      {
+        "stepNumber": 5,
+        "stepName": "Submit & Notify",
+        "actions": [
+          "Save survey",
+          "Notify charge nurse / team lead",
+          "Update care plan if needed"
+        ]
+      }
+    ]
+  },
+  "riskIndicators": {
+    "fallRisk": {
+      "triggers": [
+        "Recent falls reported",
+        "Mobility issues",
+        "Medication side effects",
+        "Environmental hazards"
+      ]
+    },
+    "skinBreakdownRisk": {
+      "triggers": [
+        "Bedridden status",
+        "Limited mobility",
+        "Poor nutrition",
+        "Incontinence issues"
+      ]
+    },
+    "medicationIssues": {
+      "triggers": [
+        "Missed doses",
+        "Side effects reported",
+        "Medication non-compliance"
+      ]
+    },
+    "emotionalDistress": {
+      "triggers": [
+        "Mood changes",
+        "Loneliness reported",
+        "Behavior changes",
+        "Lack of social engagement"
+      ]
+    },
+    "hydrationRisk": {
+      "triggers": [
+        "Poor hydration status",
+        "Decreased fluid intake",
+        "Medication side effects"
+      ]
+    }
+  }
+}
+
