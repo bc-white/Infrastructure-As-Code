@@ -1,0 +1,9 @@
+# Copy this file to terraform.tfvars and update with your values
+
+aws_profile              = "your-aws-profile"
+mongodbatlas_org_id      = "your-mongodbatlas-org-id"
+mongodbatlas_private_key = "your-mongodbatlas-private-key"
+mongodbatlas_public_key  = "your-mongodbatlas-public-key"
+org_name                 = "your-org-name"
+primary_region           = "us-east-1"
+project_name             = "your-project-name"

@@ -1,0 +1,254 @@
+data "aws_iam_policy_document" "s3_replication_assume" {
+  statement {
+    effect = "Allow"
+    principals {
+      type        = "Service"
+      identifiers = ["s3.amazonaws.com"]
+    }
+    actions = ["sts:AssumeRole"]
+  }
+}
+
+data "aws_iam_policy_document" "s3_replication" {
+  statement {
+    effect = "Allow"
+    actions = [
+      "s3:GetReplicationConfiguration",
+      "s3:ListBucket"
+    ]
+    resources = [module.s3_access_logs.s3_bucket_arn]
+  }
+  statement {
+    effect = "Allow"
+    actions = [
+      "s3:GetObjectVersionForReplication",
+      "s3:GetObjectVersionAcl",
+      "s3:GetObjectVersionTagging"
+    ]
+    resources = ["${module.s3_access_logs.s3_bucket_arn}/*"]
+  }
+  statement {
+    effect = "Allow"
+    actions = [
+      "s3:ReplicateObject",
+      "s3:ReplicateDelete",
+      "s3:ReplicateTags"
+    ]
+    resources = ["${module.s3_access_logs_dr.s3_bucket_arn}/*"]
+  }
+  statement {
+    effect = "Allow"
+    actions = [
+      "kms:Decrypt",
+      "kms:DescribeKey"
+    ]
+    resources = [aws_kms_key.org_primary.arn]
+    condition {
+      test     = "StringLike"
+      variable = "kms:ViaService"
+      values   = ["s3.${var.primary_region}.amazonaws.com"]
+    }
+  }
+  statement {
+    effect = "Allow"
+    actions = [
+      "kms:Encrypt",
+      "kms:GenerateDataKey"
+    ]
+    resources = [aws_kms_key.org_primary.arn]
+    condition {
+      test     = "StringLike"
+      variable = "kms:ViaService"
+      values   = ["s3.${var.dr_region}.amazonaws.com"]
+    }
+  }
+}
+
+resource "aws_iam_role" "s3_replication" {
+  name               = "${var.org_name}-${var.project_name}-s3-replication"
+  assume_role_policy = data.aws_iam_policy_document.s3_replication_assume.json
+}
+
+resource "aws_iam_policy" "s3_replication" {
+  name   = "${var.org_name}-${var.project_name}-s3-replication"
+  policy = data.aws_iam_policy_document.s3_replication.json
+}
+
+resource "aws_iam_role_policy_attachment" "s3_replication" {
+  role       = aws_iam_role.s3_replication.name
+  policy_arn = aws_iam_policy.s3_replication.arn
+}
+
+resource "random_id" "bucket_suffix" {
+  byte_length = 4
+}
+
+module "s3_bucket" {
+  source        = "terraform-aws-modules/s3-bucket/aws"
+  version       = "~> 5.0"
+  bucket        = "${var.org_name}-${var.project_name}-tofu-state-${random_id.bucket_suffix.hex}"
+  force_destroy = false
+  versioning = {
+    enabled = var.enable_versioning
+  }
+  server_side_encryption_configuration = {
+    rule = {
+      apply_server_side_encryption_by_default = {
+        sse_algorithm = "AES256"
+      }
+    }
+  }
+  attach_deny_insecure_transport_policy = true
+  block_public_acls                     = true
+  block_public_policy                   = true
+  ignore_public_acls                    = true
+  restrict_public_buckets               = true
+  lifecycle_rule = [
+    {
+      id      = "expire-old-versions"
+      enabled = true
+      noncurrent_version_expiration = {
+        days = 90
+      }
+    }
+  ]
+  logging = {
+    target_bucket = module.s3_access_logs.s3_bucket_id
+    target_prefix = "state-bucket/"
+  }
+  tags = {
+    Name = "${var.org_name}-${var.project_name}-tofu-state-${random_id.bucket_suffix.hex}"
+  }
+}
+
+module "s3_access_logs" {
+  source        = "terraform-aws-modules/s3-bucket/aws"
+  version       = "~> 5.0"
+  bucket        = "${var.org_name}-${var.project_name}-s3-access-logs"
+  force_destroy = false
+
+  versioning = {
+    enabled = true
+  }
+  server_side_encryption_configuration = {
+    rule = {
+      apply_server_side_encryption_by_default = {
+        sse_algorithm     = "aws:kms"
+        kms_master_key_id = aws_kms_key.org_primary.arn
+      }
+      bucket_key_enabled = true
+    }
+  }
+  attach_deny_insecure_transport_policy = true
+  attach_access_log_delivery_policy     = true
+  control_object_ownership              = true
+  object_ownership                      = "BucketOwnerPreferred"
+  acl                                   = "log-delivery-write"
+  block_public_acls                     = true
+  block_public_policy                   = true
+  ignore_public_acls                    = true
+  restrict_public_buckets               = true
+  lifecycle_rule = [
+    {
+      id      = "hipaa-compliant-retention"
+      enabled = true
+      transition = [
+        {
+          days          = 90
+          storage_class = "STANDARD_IA"
+        },
+        {
+          days          = 365
+          storage_class = "GLACIER_IR"
+        },
+        {
+          days          = 730
+          storage_class = "DEEP_ARCHIVE"
+        }
+      ]
+      expiration = {
+        days = 2190
+      }
+    }
+  ]
+
+  replication_configuration = {
+    role = aws_iam_role.s3_replication.arn
+    rules = [
+      {
+        id                        = "replicate-to-dr"
+        status                    = "Enabled"
+        priority                  = 10
+        delete_marker_replication = true
+        source_selection_criteria = {
+          sse_kms_encrypted_objects = {
+            status = "Enabled"
+          }
+        }
+        destination = {
+          bucket        = module.s3_access_logs_dr.s3_bucket_arn
+          storage_class = "STANDARD"
+          encryption_configuration = {
+            replica_kms_key_id = aws_kms_replica_key.org_dr.arn
+          }
+        }
+      }
+    ]
+  }
+  tags = {
+    Name = "${var.org_name}-${var.project_name}-s3-access-logs"
+  }
+}
+
+module "s3_access_logs_dr" {
+  source  = "terraform-aws-modules/s3-bucket/aws"
+  version = "~> 5.0"
+  providers = {
+    aws = aws.dr
+  }
+  bucket        = "${var.org_name}-${var.project_name}-s3-access-logs-dr"
+  force_destroy = false
+  versioning = {
+    enabled = true
+  }
+  server_side_encryption_configuration = {
+    rule = {
+      apply_server_side_encryption_by_default = {
+        sse_algorithm     = "aws:kms"
+        kms_master_key_id = aws_kms_replica_key.org_dr.arn
+      }
+      bucket_key_enabled = true
+    }
+  }
+  attach_deny_insecure_transport_policy = true
+  block_public_acls                     = true
+  block_public_policy                   = true
+  ignore_public_acls                    = true
+  restrict_public_buckets               = true
+  lifecycle_rule = [
+    {
+      id      = "hipaa-compliant-retention"
+      enabled = true
+      transition = [
+        {
+          days          = 90
+          storage_class = "STANDARD_IA"
+        },
+        {
+          days          = 365
+          storage_class = "GLACIER_IR"
+        },
+        {
+          days          = 730
+          storage_class = "DEEP_ARCHIVE"
+        }
+      ]
+      expiration = {
+        days = 2190
+      }
+    }
+  ]
+  tags = {
+    Name = "${var.org_name}-${var.project_name}-s3-access-logs-dr"
+  }
+}

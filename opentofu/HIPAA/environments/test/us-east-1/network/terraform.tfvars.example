@@ -1,0 +1,5 @@
+aws_profile              = "your-aws-profile"
+mongodbatlas_private_key = "your-mongodbatlas-private-key"
+mongodbatlas_public_key  = "your-mongodbatlas-public-key"
+org_name                 = "your-org-name"
+project_name             = "your-project-name"

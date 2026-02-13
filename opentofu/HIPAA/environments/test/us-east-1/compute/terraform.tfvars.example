@@ -1,0 +1,4 @@
+aws_profile  = "your-aws-profile"
+domain_name  = "example.com"
+org_name     = "your-org-name"
+project_name = "your-project-name"
