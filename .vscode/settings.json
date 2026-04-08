@@ -1,6 +1,6 @@
 {
   "sonarlint.connectedMode.project": {
-    "connectionId": "Dell-Laptop-VSCode",
+    "connectionId": "M4 MacBook Pro",
     "projectKey": "bc-white_Infrastructure-As-Code"
   },
   "snyk.advanced.autoSelectOrganization": true
